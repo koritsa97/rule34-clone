@@ -1,6 +1,6 @@
 # Rule34 Clone
 
-Original website - [Rule 34](https://rule34.xxx/)
+Original website - [Rule 34 (18+)](https://rule34.xxx/)
 
 ## Overview
 In this project I tried to replicate my favorite website rule 34 using:
