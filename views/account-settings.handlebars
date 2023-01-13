@@ -1,0 +1,13 @@
+<form action="/account/settings" method="post">
+  <label>Favorite tags</label>
+  <div class="tags-field">
+    <textarea name="favoriteTags" placeholder="Favorite tags" cols="30" rows="3"
+      class="tags-input">{{tagsString}}</textarea>
+    <ul class="tags-autocomplete" hidden></ul>
+  </div>
+  <br><br>
+
+  <button type="submit">Save</button>
+</form>
+
+<script src="/scripts/autocomplete.js"></script>

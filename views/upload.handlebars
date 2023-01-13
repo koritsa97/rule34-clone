@@ -1,0 +1,18 @@
+<h1>Upload</h1>
+<form action="/upload" method="post" enctype="multipart/form-data">
+  <label>Image File</label><br>
+  <input type="file" name="image" id="imageInput" accept="image/*">
+  <br><br>
+
+  <label>Source</label><br>
+  <input type="text" name="source" id="sourceInput" placeholder="Source">
+  <br><br>
+
+  <label>Tags separated with spaces. (ex: long_hair green_hair)</label><br>
+  <input type="text" name="tags" id="tagsInput" placeholder="Tags separated with spaces">
+  <br><br>
+
+  <button type="submit">Upload</button>
+</form>
+
+<script src="/scripts/upload.js"></script>

@@ -1,0 +1,68 @@
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+}
+
+.sidebar {
+  width: 200px;
+  float: left;
+  margin-right: 20px;
+}
+
+.posts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.post {
+  display: block;
+  max-width: 300px;
+  max-height: 300px;
+}
+
+.post-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.tags-field {
+  position: relative;
+}
+
+.tags-input {
+  max-width: 100%;
+}
+
+.search-btn {
+  margin-top: 2px;
+  width: 100%;
+}
+
+.tags-autocomplete {
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #000;
+  list-style: none;
+}
+
+.tags-autocomplete li {
+  padding: 2px 4px;
+}
+
+.tags-autocomplete li:hover {
+  background-color: #000;
+  color: #fff;
+  cursor: pointer;
+}
