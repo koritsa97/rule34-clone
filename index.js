@@ -28,7 +28,7 @@ const store = new MongoDBStore(session)({
 const uploadsDirPath = path.join(process.cwd(), 'static/uploads');
 fs.access(uploadsDirPath, (err) => {
   if (err) {
-    fs.mkdir(uploadsDirPath);
+    fs.mkdirSync(uploadsDirPath);
   }
 });
 
