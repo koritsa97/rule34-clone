@@ -1,4 +1,5 @@
 {
+  "name": "rule34-clone",
   "type": "module",
   "scripts": {
     "start": "node index",
