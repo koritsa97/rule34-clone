@@ -10,6 +10,7 @@ import passport from 'passport';
 import session from 'express-session';
 import MongoDBStore from 'connect-mongodb-session';
 import fs from 'fs';
+import { v2 as cloudinary } from 'cloudinary';
 
 import Post from './models/Post.js';
 import Tag from './models/Tag.js';
@@ -18,6 +19,11 @@ import { TagType } from './utils/constants.js';
 import './passport/index.js';
 
 dotenv.config();
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const app = express();
 const store = new MongoDBStore(session)({
@@ -241,9 +247,14 @@ app.post('/upload', auth, upload.single('image'), async (req, res, next) => {
       tags.push(tag);
     }
 
+    const previewRes = await cloudinary.uploader.upload(previewImagePath);
+    fs.rmSync(previewImagePath);
+    const originalRes = await cloudinary.uploader.upload(req.file.path);
+    fs.rmSync(req.file.path);
+
     const post = await Post.create({
-      originalImageUrl: req.file.filename,
-      previewImageUrl: req.file.filename.replace(ext, '_preview') + ext,
+      previewImageUrl: previewRes.secure_url,
+      originalImageUrl: originalRes.secure_url,
       tags,
       source: req.body.source,
       owner: req.user._id,

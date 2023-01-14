@@ -2,12 +2,12 @@
   {{> search }}
   {{> tags-list }}
 
-  <a href="/uploads/{{originalImageUrl}}" target="_blank">View Original</a>
+  <a href="{{originalImageUrl}}" target="_blank">View Original</a>
   <button type="button" id="favoriteBtn" data-postid="{{_id}}">Add to favorites</button>
 </aside>
 
 <main class="content">
-  <img src="/uploads/{{previewImageUrl}}" alt="{{tagsString}}" class="preview">
+  <img src="{{previewImageUrl}}" alt="{{tagsString}}" class="preview">
 </main>
 
 <script src="/scripts/autocomplete.js"></script>
