@@ -226,7 +226,7 @@ const upload = multer({
 
 app.post('/upload', auth, upload.single('image'), async (req, res, next) => {
   try {
-    const ext = extname(req.file.path);
+    const ext = path.extname(req.file.path);
     const previewImagePath = req.file.replace(ext, '_preview') + ext;
     await (await Jimp.read(req.file.path))
       .scaleToFit(420, 640)
