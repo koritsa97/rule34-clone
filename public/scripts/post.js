@@ -4,7 +4,7 @@ favoriteBtn.onclick = (e) => {
   const postId = e.target.dataset.postid;
 
   favoriteBtn.disabled = true;
-  fetch(`/post/${postId}/favorite`, {
+  fetch(`/posts/${postId}/favorite`, {
     method: 'PATCH',
   })
     .then((res) => res.text())
