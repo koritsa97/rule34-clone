@@ -40,4 +40,4 @@ const userSchema = new Schema(
   }
 );
 
-export default model(ModelRef.USER, userSchema);
+export const User = model(ModelRef.USER, userSchema);

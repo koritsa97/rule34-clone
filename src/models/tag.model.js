@@ -24,4 +24,4 @@ const tagSchema = new Schema(
   }
 );
 
-export default model(ModelRef.TAG, tagSchema);
+export const Tag = model(ModelRef.TAG, tagSchema);

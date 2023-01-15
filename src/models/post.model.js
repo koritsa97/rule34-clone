@@ -38,4 +38,4 @@ postSchema.virtual('tagsString').get(function () {
   return this.tags.map((tag) => tag.name).join(', ');
 });
 
-export default model(ModelRef.POST, postSchema);
+export const Post = model(ModelRef.POST, postSchema);

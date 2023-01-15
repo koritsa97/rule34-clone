@@ -1,8 +1,8 @@
 import Jimp from 'jimp';
 
-import Post from '../models/Post.js';
-import Tag from '../models/Tag.js';
-import User from '../models/User.js';
+import { Post } from '../models/post.model.js';
+import { Tag } from '../models/tag.model.js';
+import { User } from '../models/user.model.js';
 import { TagType } from '../utils/constants.js';
 
 export class PostsController {

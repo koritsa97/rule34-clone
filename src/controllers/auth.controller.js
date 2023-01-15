@@ -1,5 +1,6 @@
 import passport from 'passport';
-import User from '../models/User.js';
+
+import { User } from '../models/user.model.js';
 
 export class AuthController {
   getRegister(req, res) {

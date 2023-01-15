@@ -1,4 +1,4 @@
-import Tag from '../models/Tag.js';
+import { Tag } from '../models/tag.model.js';
 
 export class TagsController {
   async getAutocomplete(req, res, next) {
