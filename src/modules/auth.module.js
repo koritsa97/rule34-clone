@@ -2,10 +2,12 @@ import { Router } from 'express';
 import passport from 'passport';
 
 import { AuthController } from '../controllers/auth.controller.js';
+import { UsersService } from '../services/users.service.js';
 import { auth } from '../middlewares/auth.middleware.js';
 
 const router = Router();
-const authController = new AuthController();
+const usersService = new UsersService();
+const authController = new AuthController(usersService);
 
 router.get('/register', authController.getRegister.bind(authController));
 router.post('/register', authController.register.bind(authController));

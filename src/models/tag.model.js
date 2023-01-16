@@ -13,6 +13,7 @@ const tagSchema = new Schema(
       type: String,
       required: true,
       enum: Object.values(TagType),
+      default: TagType.CATEGORY,
     },
     owner: {
       type: Schema.Types.ObjectId,

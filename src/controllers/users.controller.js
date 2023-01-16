@@ -1,32 +1,28 @@
-import { Post } from '../models/post.model.js';
-import { Tag } from '../models/tag.model.js';
-import { User } from '../models/user.model.js';
-
 export class UsersController {
+  constructor(postsService, tagsService, usersService) {
+    this.postsService = postsService;
+    this.tagsService = tagsService;
+    this.usersService = usersService;
+  }
+
   async getAccount(req, res, next) {
     try {
-      const favoritePosts = await Post.find({
-        _id: {
-          $in: req.user.favoritePosts,
-        },
-      }).lean();
-      const favoriteTags = await Tag.find({
-        _id: {
-          $in: req.user.favoriteTags,
-        },
-      }).lean();
-      const uploads = await Post.find({
-        owner: req.user._id,
-      }).lean();
+      const favoritePosts = await this.postsService.findManyByIds(
+        req.user.favoritePosts
+      );
+      const favoriteTags = await this.tagsService.findManyByIds(
+        req.user.favoriteTags
+      );
+      const uploads = await this.postsService.findManyByOwner(req.user._id);
 
       res.render('account', {
+        css: ['account.css'],
         user: {
           ...req.user,
           favoritePosts,
           favoriteTags,
           uploads,
         },
-        css: ['account.css'],
       });
     } catch (error) {
       next(error);
@@ -35,11 +31,9 @@ export class UsersController {
 
   async getSettings(req, res, next) {
     try {
-      const favoriteTags = await Tag.find({
-        _id: {
-          $in: req.user.favoriteTags,
-        },
-      });
+      const favoriteTags = await this.tagsService.findManyByIds(
+        req.user.favoriteTags
+      );
 
       const tagsString = favoriteTags.map(({ name }) => name).join(' ');
       res.render('account-settings', {
@@ -53,23 +47,19 @@ export class UsersController {
 
   async updateSettings(req, res, next) {
     try {
-      const { favoriteTags } = req.body;
+      let { favoriteTags } = req.body;
+      favoriteTags = favoriteTags.toLowerCase().trim();
+
       if (favoriteTags === '') {
         res.redirect('/account/settings');
         return;
       }
 
-      const tags = await Tag.find({
-        name: {
-          $in: favoriteTags.split(' '),
-        },
-      });
+      const tags = await this.tagsService.findManyByNames(
+        favoriteTags.split(' ')
+      );
 
-      const user = await User.findByIdAndUpdate(req.user._id, {
-        $addToSet: {
-          favoriteTags: tags,
-        },
-      });
+      await this.usersService.updateFavoriteTags(req.user._id, tags);
 
       res.redirect('/account/settings');
     } catch (error) {

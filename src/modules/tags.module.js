@@ -1,9 +1,11 @@
 import { Router } from 'express';
 
 import { TagsController } from '../controllers/tags.controller.js';
+import { TagsService } from '../services/tags.service.js';
 
 const router = Router();
-const tagsController = new TagsController();
+const tagsService = new TagsService();
+const tagsController = new TagsController(tagsService);
 
 router.get(
   '/tags/autocomplete',

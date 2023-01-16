@@ -1,17 +1,17 @@
 import passport from 'passport';
 
-import { User } from '../models/user.model.js';
-
 export class AuthController {
+  constructor(usersService) {
+    this.usersService = usersService;
+  }
+
   getRegister(req, res) {
     res.render('register');
   }
 
   async register(req, res, next) {
     try {
-      const user = await User.create({
-        ...req.body,
-      });
+      await this.usersService.create(req.body);
 
       passport.authenticate('local', {
         failureRedirect: '/login',

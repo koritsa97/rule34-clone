@@ -1,11 +1,21 @@
 import { Router } from 'express';
 
 import { PostsController } from '../controllers/posts.controller.js';
+import { PostsService } from '../services/posts.service.js';
+import { TagsService } from '../services/tags.service.js';
+import { UsersService } from '../services/users.service.js';
 import { auth } from '../middlewares/auth.middleware.js';
 import { upload } from '../config/storage.js';
 
 const router = Router();
-const postsController = new PostsController();
+const postsService = new PostsService();
+const tagsService = new TagsService();
+const usersService = new UsersService();
+const postsController = new PostsController(
+  postsService,
+  tagsService,
+  usersService
+);
 
 router.get('/posts', postsController.getPosts.bind(postsController));
 router.get('/feed', postsController.getFeed.bind(postsController));

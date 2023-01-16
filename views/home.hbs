@@ -6,6 +6,10 @@
   {{#if user}}
   <a href="/account">My Accout</a>
   {{/if}}
+  {{#unless user}}
+  <a href="/login">Login</a>
+  <a href="/register">Register</a>
+  {{/unless}}
 </nav>
 
 <br>

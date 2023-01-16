@@ -1,17 +1,20 @@
-import { Tag } from '../models/tag.model.js';
-
 export class TagsController {
+  constructor(tagsService) {
+    this.tagsService = tagsService;
+  }
+
   async getAutocomplete(req, res, next) {
     try {
-      const { query } = req.query;
-      const tags = await Tag.find({
-        name: {
-          $regex: query,
-          $options: 'i',
-        },
-      });
+      let { query } = req.query;
+      query = query.toLowerCase().trim();
 
-      res.json(query === '' ? [] : tags);
+      if (query === '') {
+        res.json([]);
+        return;
+      }
+
+      const tags = await this.tagsService.search(query);
+      res.json(tags);
     } catch (error) {
       next(error);
     }
