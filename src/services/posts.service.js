@@ -5,37 +5,44 @@ import { Post } from '../models/post.model.js';
 
 export class PostsService {
   async findAll() {
-    return Post.find().lean();
+    const posts = await Post.find().populate('tags');
+    return posts.map((post) => post.toJSON());
   }
 
   async findByTags(tags) {
-    return Post.find({
+    const posts = await Post.find({
       tags: {
         $in: tags,
       },
-    }).lean();
+    }).populate('tags');
+    return posts.map((post) => post.toJSON());
   }
 
   async findById(id) {
-    return Post.findById(id).lean();
+    const post = await Post.findById(id).populate('tags');
+    return post.toJSON();
   }
 
   async findManyByIds(ids) {
-    return Post.find({
+    const posts = await Post.find({
       _id: {
         $in: ids,
       },
-    }).lean();
+    }).populate('tags');
+    return posts.map((post) => post.toJSON());
   }
 
   async findManyByOwner(ownerId) {
-    return Post.find({
+    const posts = await Post.find({
       owner: ownerId,
-    }).lean();
+    }).populate('tags');
+    return posts.map((post) => post.toJSON());
   }
 
   async create(data) {
-    return (await Post.create(data)).toJSON();
+    const post = await Post.create(data);
+    await post.populate('tags');
+    return post.toJSON();
   }
 
   async uploadImages(originalImagePath, previewImagePath) {

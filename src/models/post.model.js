@@ -31,11 +31,14 @@ const postSchema = new Schema(
     toJSON: {
       virtuals: true,
     },
+    toObject: {
+      virtuals: true,
+    },
   }
 );
 
 postSchema.virtual('tagsString').get(function () {
-  return this.tags.map((tag) => tag.name).join(', ');
+  return this.tags.map(({ name }) => name).join(' ');
 });
 
 export const Post = model(ModelRef.POST, postSchema);
