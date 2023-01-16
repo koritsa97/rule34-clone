@@ -1,12 +1,12 @@
 import multer from 'multer';
 
-import { UPLOADS_DIR } from '../utils/constants.js';
+import { UPLOADS_DIR } from '@/utils/constants';
 
 export const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
+  destination: (_req, _file, cb) => {
     cb(null, UPLOADS_DIR);
   },
-  filename: (req, file, cb) => {
+  filename: (_req, file, cb) => {
     cb(null, `${Date.now()}_${file.originalname}`);
   },
 });

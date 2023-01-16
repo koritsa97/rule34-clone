@@ -1,15 +1,16 @@
+import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 
-export class AuthController {
-  constructor(usersService) {
-    this.usersService = usersService;
-  }
+import { UsersService } from '@/services/users.service';
 
-  getRegister(req, res) {
+export class AuthController {
+  constructor(private readonly usersService: UsersService) {}
+
+  getRegister(_req: Request, res: Response) {
     res.render('register');
   }
 
-  async register(req, res, next) {
+  async register(req: Request, res: Response, next: NextFunction) {
     try {
       await this.usersService.create(req.body);
 
@@ -22,15 +23,15 @@ export class AuthController {
     }
   }
 
-  getLogin(req, res) {
+  getLogin(_req: Request, res: Response) {
     res.render('login');
   }
 
-  login(req, res) {
+  login(_req: Request, res: Response) {
     res.redirect('/posts');
   }
 
-  logout(req, res) {
+  logout(req: Request, res: Response) {
     req.logout((err) => {
       if (err) {
         console.log(err);

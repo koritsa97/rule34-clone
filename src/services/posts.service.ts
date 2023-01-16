@@ -1,51 +1,54 @@
 import fs from 'fs/promises';
 import Jimp from 'jimp';
+import { v2 as cloudinary } from 'cloudinary';
+import path from 'path';
 
-import { Post } from '../models/post.model.js';
+import { Post, PostEntity } from '@/models/post.model';
+import { CreatePostDto } from '@/types/posts.dto';
 
 export class PostsService {
-  async findAll() {
+  async findAll(): Promise<PostEntity[]> {
     const posts = await Post.find().populate('tags');
-    return posts.map((post) => post.toJSON());
+    return posts;
   }
 
-  async findByTags(tags) {
+  async findByTags(tags: string[]): Promise<PostEntity[]> {
     const posts = await Post.find({
       tags: {
         $in: tags,
       },
     }).populate('tags');
-    return posts.map((post) => post.toJSON());
+    return posts;
   }
 
-  async findById(id) {
+  async findById(id: string): Promise<PostEntity | null> {
     const post = await Post.findById(id).populate('tags');
-    return post.toJSON();
+    return post;
   }
 
-  async findManyByIds(ids) {
+  async findManyByIds(ids: string[]): Promise<PostEntity[]> {
     const posts = await Post.find({
       _id: {
         $in: ids,
       },
     }).populate('tags');
-    return posts.map((post) => post.toJSON());
+    return posts;
   }
 
-  async findManyByOwner(ownerId) {
+  async findManyByOwner(ownerId: string): Promise<PostEntity[]> {
     const posts = await Post.find({
       owner: ownerId,
     }).populate('tags');
-    return posts.map((post) => post.toJSON());
+    return posts;
   }
 
-  async create(data) {
+  async create(data: CreatePostDto): Promise<PostEntity> {
     const post = await Post.create(data);
     await post.populate('tags');
-    return post.toJSON();
+    return post;
   }
 
-  async uploadImages(originalImagePath, previewImagePath) {
+  async uploadImages(originalImagePath: string, previewImagePath: string) {
     const originalRes = await cloudinary.uploader.upload(originalImagePath);
     await fs.rm(originalImagePath);
     const previewRes = await cloudinary.uploader.upload(previewImagePath);
@@ -57,7 +60,7 @@ export class PostsService {
     };
   }
 
-  async createPreviewImage(originalImagePath) {
+  async createPreviewImage(originalImagePath: string): Promise<string> {
     const ext = path.extname(originalImagePath);
     const previewImagePath = originalImagePath.replace(ext, '_preview' + ext);
 

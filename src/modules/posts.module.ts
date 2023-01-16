@@ -1,11 +1,11 @@
 import { Router } from 'express';
 
-import { PostsController } from '../controllers/posts.controller.js';
-import { PostsService } from '../services/posts.service.js';
-import { TagsService } from '../services/tags.service.js';
-import { UsersService } from '../services/users.service.js';
-import { auth } from '../middlewares/auth.middleware.js';
-import { upload } from '../config/storage.js';
+import { PostsController } from '@/controllers/posts.controller';
+import { PostsService } from '@/services/posts.service';
+import { TagsService } from '@/services/tags.service';
+import { UsersService } from '@/services/users.service';
+import { auth } from '@/middlewares/auth.middleware';
+import { upload } from '@/config/storage';
 
 const router = Router();
 const postsService = new PostsService();

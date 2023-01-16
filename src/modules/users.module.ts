@@ -1,10 +1,10 @@
 import { Router } from 'express';
 
-import { UsersController } from '../controllers/users.controller.js';
-import { PostsService } from '../services/posts.service.js';
-import { TagsService } from '../services/tags.service.js';
-import { UsersService } from '../services/users.service.js';
-import { auth } from '../middlewares/auth.middleware.js';
+import { UsersController } from '@/controllers/users.controller';
+import { PostsService } from '@/services/posts.service';
+import { TagsService } from '@/services/tags.service';
+import { UsersService } from '@/services/users.service';
+import { auth } from '@/middlewares/auth.middleware';
 
 const router = Router();
 const postsService = new PostsService();

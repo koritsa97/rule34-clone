@@ -4,23 +4,29 @@ import { engine } from 'express-handlebars';
 import morgan from 'morgan';
 import passport from 'passport';
 import session from 'express-session';
-import MongoDBStore from 'connect-mongodb-session';
+import ConnectMongoDBSession from 'connect-mongodb-session';
 import fs from 'fs';
 import { v2 as cloudinary } from 'cloudinary';
 
-import './config/passport/index.js';
-import { PUBLIC_DIR, UPLOADS_DIR } from './utils/constants.js';
-import { errorHandler } from './middlewares/error-handler.middleware.js';
-import postsModule from './modules/posts.module.js';
-import authModule from './modules/auth.module.js';
-import usersModule from './modules/users.module.js';
-import tagsModule from './modules/tags.module.js';
+import '@/config/passport';
+import { PUBLIC_DIR, UPLOADS_DIR } from '@/utils/constants';
+import { errorHandler } from '@/middlewares/error-handler.middleware';
+import postsModule from '@/modules/posts.module';
+import authModule from '@/modules/auth.module';
+import usersModule from '@/modules/users.module';
+import tagsModule from '@/modules/tags.module';
 
-dotenv.config();
+// TODO Check error output
+const envOutput = dotenv.config();
+if (envOutput.error) {
+  console.log(envOutput.error);
+  process.exit(1);
+}
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  api_key: process.env.CLOUDINARY_API_KEY || '',
+  api_secret: process.env.CLOUDINARY_API_SECRET || '',
 });
 fs.access(UPLOADS_DIR, (err) => {
   if (err) {
@@ -29,7 +35,7 @@ fs.access(UPLOADS_DIR, (err) => {
 });
 
 const app = express();
-const store = new MongoDBStore(session)({
+const mongoDBSessionStore = new (ConnectMongoDBSession(session))({
   uri: process.env.DB_URL,
   collection: '_user_sessions',
 });
@@ -51,7 +57,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    store,
+    store: mongoDBSessionStore,
   })
 );
 app.use(passport.session());

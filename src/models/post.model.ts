@@ -1,8 +1,17 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document, Types } from 'mongoose';
 
-import { ModelRef } from '../utils/constants.js';
+import { ModelRef } from '@/utils/constants';
 
-const postSchema = new Schema(
+export interface PostEntity extends Document {
+  previewImageUrl: string;
+  originalImageUrl: string;
+  source?: string;
+  tags: Types.ObjectId[];
+  tagsString?: String;
+  owner: Types.ObjectId;
+}
+
+const postSchema = new Schema<PostEntity>(
   {
     previewImageUrl: {
       type: String,
@@ -21,6 +30,7 @@ const postSchema = new Schema(
         ref: ModelRef.TAG,
       },
     ],
+    tagsString: String,
     owner: {
       type: Schema.Types.ObjectId,
       ref: ModelRef.USER,
@@ -37,8 +47,4 @@ const postSchema = new Schema(
   }
 );
 
-postSchema.virtual('tagsString').get(function () {
-  return this.tags.map(({ name }) => name).join(' ');
-});
-
-export const Post = model(ModelRef.POST, postSchema);
+export const Post = model<PostEntity>(ModelRef.POST, postSchema);

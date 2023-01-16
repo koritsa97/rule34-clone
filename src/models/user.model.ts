@@ -1,8 +1,17 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document, Types } from 'mongoose';
 
-import { Theme, ModelRef } from '../utils/constants.js';
+import { Theme, ModelRef } from '@/utils/constants';
 
-const userSchema = new Schema(
+export interface UserEntity extends Document {
+  username: string;
+  password: string;
+  avatarUrl: string;
+  favoriteTags: Types.ObjectId[];
+  favoritePosts: Types.ObjectId[];
+  theme: typeof Theme[keyof typeof Theme];
+}
+
+const userSchema = new Schema<UserEntity>(
   {
     username: {
       type: String,
@@ -40,4 +49,4 @@ const userSchema = new Schema(
   }
 );
 
-export const User = model(ModelRef.USER, userSchema);
+export const User = model<UserEntity>(ModelRef.USER, userSchema);

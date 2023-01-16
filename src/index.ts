@@ -1,5 +1,5 @@
-import app from './src/app.js';
-import { initMongoose } from './src/config/mongoose.js';
+import app from '@/app';
+import { initMongoose } from '@/config/mongoose';
 
 initMongoose()
   .then(() => {

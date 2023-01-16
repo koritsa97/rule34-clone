@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import passport from 'passport';
 
-import { AuthController } from '../controllers/auth.controller.js';
-import { UsersService } from '../services/users.service.js';
-import { auth } from '../middlewares/auth.middleware.js';
+import { AuthController } from '@/controllers/auth.controller';
+import { UsersService } from '@/services/users.service';
+import { auth } from '@/middlewares/auth.middleware';
 
 const router = Router();
 const usersService = new UsersService();

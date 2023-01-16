@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
-import { TagsController } from '../controllers/tags.controller.js';
-import { TagsService } from '../services/tags.service.js';
+import { TagsController } from '@/controllers/tags.controller';
+import { TagsService } from '@/services/tags.service';
 
 const router = Router();
 const tagsService = new TagsService();
