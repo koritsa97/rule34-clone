@@ -1,35 +1,38 @@
-import { User, UserEntity } from '@/models/user.model';
+import { prisma } from '@/config/prisma';
+import { CreateUserDto } from '@/types/users.dto';
 
 export class UsersService {
-  async create(data: UserEntity): Promise<UserEntity> {
-    return User.create(data);
+  async create(data: CreateUserDto) {
+    return prisma.user.create({
+      data,
+    });
   }
 
-  async addPostToFavorites(
-    userId: string,
-    postId: string
-  ): Promise<UserEntity | null> {
-    return User.findByIdAndUpdate(
-      userId,
-      {
-        $addToSet: {
-          favoritePosts: postId,
+  async addPostToFavorites(userId: number, postId: number) {
+    return prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        favoritePosts: {
+          connect: {
+            id: postId,
+          },
         },
       },
-      { new: true }
-    );
+    });
   }
 
-  async updateFavoriteTags(
-    userId: string,
-    tags: string[]
-  ): Promise<UserEntity | null> {
-    return User.findByIdAndUpdate(
-      userId,
-      {
-        favoriteTags: tags,
+  async updateFavoriteTags(userId: number, tagsIds: number[]) {
+    return prisma.user.update({
+      where: {
+        id: userId,
       },
-      { new: true }
-    );
+      data: {
+        favoriteTags: {
+          set: tagsIds.map((id) => ({ id })),
+        },
+      },
+    });
   }
 }

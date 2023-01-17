@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
+import { Tag, User } from '@prisma/client';
 
 import { PostsService } from '@/services/posts.service';
 import { TagsService } from '@/services/tags.service';
 import { UsersService } from '@/services/users.service';
-import { UserEntity } from '@/models/user.model';
 
 export class PostsController {
   constructor(
@@ -15,17 +15,19 @@ export class PostsController {
   async getPosts(req: Request, res: Response, next: NextFunction) {
     try {
       const { query } = req.query as { query: string };
-      const user = req.user as UserEntity | undefined;
+      const user = req.user as User | undefined;
 
       if (!query) {
         const posts = await this.postsService.findAll();
-        const tags = await this.tagsService.findInPosts(posts);
+        const tags = this.tagsService.getUniqueTags(
+          posts.flatMap((post) => post.tags)
+        );
 
         res.render('posts', {
           css: ['posts.css'],
-          posts: posts.map((post) => post.toJSON()),
-          tags: tags.map((tag) => tag.toJSON()),
-          user: user?.toJSON(),
+          posts,
+          tags,
+          user,
         });
 
         return;
@@ -34,16 +36,18 @@ export class PostsController {
       const tagsNames = query.toLowerCase().split(' ');
 
       const queriedTags = await this.tagsService.findManyByNames(tagsNames);
-      const posts = await this.postsService.findByTags(
-        queriedTags.map(({ _id }) => _id)
+      const posts = await this.postsService.findManyByTags(
+        queriedTags.map(({ id }) => id)
       );
-      const tags = await this.tagsService.findInPosts(posts);
+      const tags = this.tagsService.getUniqueTags(
+        posts.flatMap((post) => post.tags)
+      );
 
       res.render('posts', {
         css: ['posts.css'],
-        posts: posts.map((post) => post.toJSON()),
-        tags: tags.map((tag) => tag.toJSON()),
-        user: user?.toJSON(),
+        posts,
+        tags,
+        user,
       });
     } catch (error) {
       next(error);
@@ -52,16 +56,18 @@ export class PostsController {
 
   async getFeed(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = req.user as UserEntity;
-      const posts = await this.postsService.findByTags(
-        user.favoriteTags.map((tag) => tag.toString())
+      const user = req.user as User & { favoriteTags: Tag[] };
+      const posts = await this.postsService.findManyByTags(
+        user.favoriteTags.map((tag) => tag.id)
       );
-      const tags = await this.tagsService.findInPosts(posts);
+      const tags = this.tagsService.getUniqueTags(
+        posts.flatMap((post) => post.tags)
+      );
 
       res.render('feed', {
-        posts: posts.map((post) => post.toJSON()),
-        tags: tags.map((tag) => tag.toJSON()),
-        user: user.toJSON(),
+        posts,
+        tags,
+        user,
       });
     } catch (error) {
       next(error);
@@ -71,20 +77,20 @@ export class PostsController {
   async getPostById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params as { id: string };
-      const user = req.user as UserEntity | undefined;
+      const user = req.user as User | undefined;
 
-      const post = await this.postsService.findById(id);
+      const post = await this.postsService.findOneById(+id);
       if (!post) {
         res.redirect('/posts');
         return;
       }
-      const tags = await this.tagsService.findInPost(post);
+
+      console.log(post);
 
       res.render('post', {
         css: ['post.css'],
-        post: post.toJSON(),
-        tags: tags.map((tag) => tag.toJSON()),
-        user: user?.toJSON(),
+        post,
+        user,
       });
     } catch (error) {
       next(error);
@@ -94,9 +100,9 @@ export class PostsController {
   async addPostToFavorites(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params as { id: string };
-      const user = req.user as UserEntity;
+      const user = req.user as User;
 
-      await this.usersService.addPostToFavorites(user._id, id);
+      await this.usersService.addPostToFavorites(user.id, +id);
 
       res.send('Success');
     } catch (error) {
@@ -105,25 +111,24 @@ export class PostsController {
   }
 
   getUpload(req: Request, res: Response) {
-    const user = req.user as UserEntity;
+    const user = req.user as User;
     res.render('upload', {
-      user: user.toJSON(),
+      user,
     });
   }
 
   async uploadPost(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = req.user as UserEntity;
+      const user = req.user as User;
       if (!req.file) {
         res.status(422).end();
         return;
       }
 
-      const tagNames = req.body.tags.toLowerCase().trim().split(' ');
-      const tags = await this.tagsService.findOrCreateManyByNames(
-        tagNames,
-        user._id
-      );
+      const tagNames = (req.body.tags as string)
+        .toLowerCase()
+        .trim()
+        .split(' ');
 
       const previewImagePath = await this.postsService.createPreviewImage(
         req.file.path
@@ -134,11 +139,11 @@ export class PostsController {
       );
 
       await this.postsService.create({
-        originalImageUrl: originalUrl,
-        previewImageUrl: previewUrl,
-        tags: tags.map((tag) => tag._id),
-        source: req.body.source as string,
-        owner: user._id,
+        originalUrl,
+        previewUrl,
+        tags: tagNames,
+        sourceUrl: req.body.source as string,
+        ownerId: user.id,
       });
 
       res.redirect('/posts');

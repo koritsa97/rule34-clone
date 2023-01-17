@@ -1,21 +1,34 @@
 import passport from 'passport';
+import { User } from '@prisma/client';
 
 import { localStrategy } from './local.strategy';
-import { User, UserEntity } from '@/models/user.model';
+import { prisma } from '@/config/prisma';
 
 passport.use(localStrategy);
 
 export interface SerializedUser {
-  _id: string;
+  id: number;
 }
 
 passport.serializeUser<SerializedUser>((user, cb) => {
-  cb(null, { _id: (user as UserEntity)._id });
+  cb(null, { id: (user as User).id });
 });
 
 passport.deserializeUser<SerializedUser>(async (user, cb) => {
   try {
-    const targetUser = await User.findById(user._id).lean();
+    const targetUser = await prisma.user.findUnique({
+      where: {
+        id: user.id,
+      },
+      include: {
+        createdTags: true,
+        favoritedBy: true,
+        favoritePosts: true,
+        favoriteTags: true,
+        favoriteUsers: true,
+        uploads: true,
+      },
+    });
     if (!targetUser) {
       cb(null, false);
     } else {

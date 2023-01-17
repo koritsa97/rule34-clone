@@ -7,6 +7,7 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@prisma/client": "^4.8.1",
     "cloudinary": "^1.33.0",
     "connect-mongodb-session": "^3.1.1",
     "dotenv": "^16.0.3",
@@ -30,6 +31,7 @@
     "@types/passport": "^1.0.11",
     "@types/passport-local": "^1.0.35",
     "nodemon": "^2.0.20",
+    "prisma": "^4.8.1",
     "ts-node": "^10.9.1",
     "ts-patch": "^2.1.0",
     "tsconfig-paths": "^4.1.2",

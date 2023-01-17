@@ -3,6 +3,7 @@ declare global {
     interface ProcessEnv {
       PORT: string;
       DB_URL: string;
+      MONGODB_URL: string;
       SESSION_SECRET: string;
       CLOUDINARY_CLOUD_NAME: string;
       CLOUDINARY_API_KEY: string;

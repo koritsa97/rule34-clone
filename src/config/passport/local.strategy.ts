@@ -1,12 +1,19 @@
 import { Strategy } from 'passport-local';
 
-import { User } from '@/models/user.model';
+import { prisma } from '@/config/prisma';
 
 export const localStrategy = new Strategy(async (username, password, cb) => {
   try {
-    const user = await User.findOne({
-      username,
-      password,
+    const user = await prisma.user.findFirst({
+      where: { username, password },
+      include: {
+        createdTags: true,
+        favoritedBy: true,
+        favoritePosts: true,
+        favoriteTags: true,
+        favoriteUsers: true,
+        uploads: true,
+      },
     });
     if (!user) {
       cb(null, false);

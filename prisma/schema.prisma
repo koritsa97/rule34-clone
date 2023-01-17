@@ -1,0 +1,64 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["clientExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+enum Theme {
+  LIGHT
+  DARK
+}
+
+enum TagType {
+  DEFAULT
+  META
+  AUTHOR
+  FANDOM
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  username      String   @unique
+  password      String
+  avatarUrl     String?
+  theme         Theme    @default(DARK)
+  uploads       Post[]
+  favoriteTags  Tag[]    @relation("favoriteTags")
+  favoritePosts Post[]   @relation("favoritePosts")
+  favoriteUsers User[]   @relation("favoriteUsers")
+  favoritedBy   User[]   @relation("favoriteUsers")
+  createdTags   Tag[]
+}
+
+model Post {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+  previewUrl  String
+  originalUrl String
+  sourceUrl   String?
+  owner       User      @relation(fields: [ownerId], references: [id])
+  ownerId     Int
+  favoritedBy User[]    @relation("favoritePosts")
+  tags        Tag[]     @relation("postTags")
+  tagsString  String
+}
+
+model Tag {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String   @unique
+  type        TagType  @default(DEFAULT)
+  owner       User     @relation(fields: [ownerId], references: [id])
+  ownerId     Int
+  favoritedBy User[]   @relation("favoriteTags")
+  posts       Post[]   @relation("postTags")
+}

@@ -1,13 +1,13 @@
 <aside class="sidebar">
   {{> search }}
-  {{> tags-list }}
+  {{> tags-list tags=post.tags }}
 
-  <a href="{{post.originalImageUrl}}" target="_blank">View Original</a>
-  <button type="button" id="favoriteBtn" data-postid="{{_id}}">Add to favorites</button>
+  <a href="{{post.originalUrl}}" target="_blank">View Original</a>
+  <button type="button" id="favoriteBtn" data-postid="{{post.id}}">Add to favorites</button>
 </aside>
 
 <main class="content">
-  <img src="{{post.previewImageUrl}}" alt="{{post.tagsString}}" class="preview">
+  <img src="{{post.previewUrl}}" alt="{{post.tagsString}}" class="preview">
 </main>
 
 <script src="/scripts/autocomplete.js"></script>

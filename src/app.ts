@@ -16,7 +16,6 @@ import authModule from '@/modules/auth.module';
 import usersModule from '@/modules/users.module';
 import tagsModule from '@/modules/tags.module';
 
-// TODO Check error output
 const envOutput = dotenv.config();
 if (envOutput.error) {
   console.log(envOutput.error);
@@ -36,7 +35,7 @@ fs.access(UPLOADS_DIR, (err) => {
 
 const app = express();
 const mongoDBSessionStore = new (ConnectMongoDBSession(session))({
-  uri: process.env.DB_URL,
+  uri: process.env.MONGODB_URL,
   collection: '_user_sessions',
 });
 

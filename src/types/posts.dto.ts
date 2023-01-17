@@ -1,7 +1,7 @@
 export interface CreatePostDto {
-  previewImageUrl: string;
-  originalImageUrl: string;
-  source?: string;
+  previewUrl: string;
+  originalUrl: string;
+  sourceUrl?: string;
   tags: string[];
-  owner: string;
+  ownerId: number;
 }

@@ -1,7 +1,7 @@
 <div class="posts">
   {{#each posts}}
-  <a href="/posts/{{this._id}}" class="post">
-    <img src="{{this.previewImageUrl}}" alt="{{this.tagsString}}" class="post-img">
+  <a href="/posts/{{this.id}}" class="post">
+    <img src="{{this.previewUrl}}" alt="{{this.tagsString}}" class="post-img">
   </a>
   {{/each}}
 </div>
