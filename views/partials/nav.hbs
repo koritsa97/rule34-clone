@@ -1,16 +1,66 @@
-<nav>
-  <a href="/">Home</a>
-  <a href="/posts">Posts</a>
+<div class="navbar">
+  <nav class="nav">
+    <ul class="nav-list">
+      <li class="nav-list-item">
+        <a
+          href="/"
+          class="nav-link{{#if (ifEquals @exphbs.view 'home')}} nav-link-active{{else}}{{/if}}"
+        >
+          Home
+        </a>
+      </li>
+      <li class="nav-list-item">
+        <a
+          href="/posts"
+          class="nav-link{{#if (ifEquals @exphbs.view 'posts')}} nav-link-active{{else}}{{/if}}"
+        >
+          Posts
+        </a>
+      </li>
+      {{#if user}}
+      <li class="nav-list-item">
+        <a
+          href="/feed"
+          class="nav-link{{#if (ifEquals @exphbs.view 'feed')}} nav-link-active{{else}}{{/if}}"
+        >
+          Feed
+        </a>
+      </li>
+      
+      <a
+        href="/upload"
+        class="nav-link{{#if (ifEquals @exphbs.view 'upload')}} nav-link-active{{else}}{{/if}}"
+      >
+        Upload
+      </a>
+      <a
+        href="/account/{{user.id}}"
+        class="nav-link{{#if (ifEquals @exphbs.view 'account')}} nav-link-active{{else}}{{/if}}"
+      >
+        My Account
+      </a>
+      {{/if}}
+    </ul>
 
-  {{#if user}}
-  <a href="/feed">Feed</a>
-  <a href="/upload">Upload</a>
-  <a href="/account/{{user.id}}">My Account</a>
-  {{/if}}
+    <div class="searchbar">
+      {{> search }}
+    </div>
 
-  {{#unless user}}
-  <a href="/login">Login</a>
-  <a href="/register">Register</a>
-  {{/unless}}
-</nav>
-<br>
+    {{#unless user}}
+    <ul class="nav-list nav-list-auth">
+      <a
+        href="/login"
+        class="nav-link{{#if (ifEquals @exphbs.view 'login')}} nav-link-active{{else}}{{/if}}"
+      >
+        Login
+      </a>
+      <a
+        href="/register"
+        class="nav-link{{#if (ifEquals @exphbs.view 'register')}} nav-link-active{{else}}{{/if}}"
+      >
+        Register
+      </a>
+    </ul>
+    {{/unless}}
+  </nav>
+</div>
