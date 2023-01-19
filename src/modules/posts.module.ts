@@ -18,7 +18,7 @@ const postsController = new PostsController(
 );
 
 router.get('/posts', postsController.getPosts.bind(postsController));
-router.get('/feed', postsController.getFeed.bind(postsController));
+router.get('/feed', auth, postsController.getFeed.bind(postsController));
 router.get('/posts/:id', postsController.getPostById.bind(postsController));
 router.patch(
   '/posts/:id/favorite',

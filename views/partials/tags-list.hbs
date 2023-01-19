@@ -1,7 +1,7 @@
 <ul class="tags-list">
   {{#each tags}}
   <li class="tag tag-{{this.type}}">
-    <a href="/posts?query={{this.name}}">{{this.name}}</a>
+    <a href="/posts?query={{this.name}}" class="tag-link">{{this.name}}</a>
   </li>
   {{/each}}
 </ul>
