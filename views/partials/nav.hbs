@@ -26,40 +26,47 @@
           Feed
         </a>
       </li>
-      
-      <a
-        href="/upload"
-        class="nav-link{{#if (ifEquals @exphbs.view 'upload')}} nav-link-active{{else}}{{/if}}"
-      >
-        Upload
-      </a>
-      <a
-        href="/account/{{user.id}}"
-        class="nav-link{{#if (ifEquals @exphbs.view 'account')}} nav-link-active{{else}}{{/if}}"
-      >
-        My Account
-      </a>
+      <li class="nav-list-item">
+        <a
+          href="/upload"
+          class="nav-link{{#if (ifEquals @exphbs.view 'upload')}} nav-link-active{{else}}{{/if}}"
+        >
+          Upload
+        </a>
+      </li>
+      <li class="nav-list-item">
+        <a
+          href="/account/{{user.id}}"
+          class="nav-link{{#if (ifEquals @exphbs.view 'account')}} nav-link-active{{else}}{{/if}}"
+        >
+          My Account
+        </a>
+      </li>
       {{/if}}
     </ul>
 
     <div class="searchbar">
-      {{> search }}
+      {{> searchbar }}
     </div>
 
     {{#unless user}}
     <ul class="nav-list nav-list-auth">
-      <a
-        href="/login"
-        class="nav-link{{#if (ifEquals @exphbs.view 'login')}} nav-link-active{{else}}{{/if}}"
-      >
-        Login
-      </a>
-      <a
-        href="/register"
-        class="nav-link{{#if (ifEquals @exphbs.view 'register')}} nav-link-active{{else}}{{/if}}"
-      >
-        Register
-      </a>
+      <li class="nav-list-item">
+        <a
+          href="/login"
+          class="nav-link{{#if (ifEquals @exphbs.view 'login')}} nav-link-active{{else}}{{/if}}"
+        >
+          Login
+        </a>
+      </li>
+      <li class="nav-list-item">
+        <a
+          href="/register"
+          class="nav-link{{#if (ifEquals @exphbs.view 'register')}} nav-link-active{{else}}{{/if}}"
+        >
+          Register
+        </a>
+      </li>
     </ul>
     {{/unless}}
   </nav>
