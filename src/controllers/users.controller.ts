@@ -12,15 +12,26 @@ export class UsersController {
 
   async getAccount(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = req.user as User & {
+      const authUser = req.user as User & {
         favoritePosts: Post[];
         favoriteTags: Tag[];
         uploads: Post[];
-      };
+      } | undefined;
+
+      const user = await this.usersService.findOneById(+req.params.id);
+
+      if (!user) {
+        res.redirect('/');
+        return;
+      }
+
+      const isAuthorized = authUser && authUser.id === user.id;
+      console.log(isAuthorized);
 
       res.render('account', {
         css: ['account.css'],
         user,
+        isAuthorized,
       });
     } catch (error) {
       next(error);

@@ -1,11 +1,12 @@
-{{#with user}}
-<h1>{{username}}</h1>
-<a href="/account/settings">Settings</a>
+<h1>{{user.username}}</h1>
+{{#if isAuthorized}}
+<a href="/account//settings">Settings</a>
 <a href="/logout">Logout</a>
+{{/if}}
 
 <h2>Favorite tags</h2>
 <ul class="favorite-tags-list">
-  {{#each favoriteTags}}
+  {{#each user.favoriteTags}}
   <li class="favorite-tags-item favorite-tags-item-{{this.type}}">
     <a href="/posts?query={{this.name}}">{{this.name}}</a>
   </li>
@@ -13,8 +14,7 @@
 </ul>
 
 <h2>Favorite posts</h2>
-{{> posts-list posts=favoritePosts }}
+{{> posts-list posts=user.favoritePosts }}
 
 <h2>Uploads</h2>
-{{> posts-list posts=uploads }}
-{{/with}}
+{{> posts-list posts=user.uploads }}

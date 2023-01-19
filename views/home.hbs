@@ -4,7 +4,7 @@
 <nav>
   <a href="/posts">Posts</a>
   {{#if user}}
-  <a href="/account">My Accout</a>
+  <a href="/account/{{user.id}}">My Accout</a>
   {{/if}}
   {{#unless user}}
   <a href="/login">Login</a>

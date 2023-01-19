@@ -35,4 +35,17 @@ export class UsersService {
       },
     });
   }
+
+  async findOneById(userId: number) {
+    return prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      include: {
+        favoritePosts: true,
+        favoriteTags: true,
+        uploads: true,
+      },
+    });
+  }
 }
