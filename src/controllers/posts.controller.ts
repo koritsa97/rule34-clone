@@ -85,8 +85,6 @@ export class PostsController {
         return;
       }
 
-      console.log(post);
-
       res.render('post', {
         css: ['post.css'],
         post,

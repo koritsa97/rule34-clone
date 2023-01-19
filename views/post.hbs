@@ -2,7 +2,10 @@
   {{> search }}
   {{> tags-list tags=post.tags }}
 
+  <p>Uploaded by: <a href="/account/{{post.owner.id}}">{{post.owner.username}}</a></p>
+
   <a href="{{post.originalUrl}}" target="_blank">View Original</a>
+  <br><br>
   <button type="button" id="favoriteBtn" data-postid="{{post.id}}">Add to favorites</button>
 </aside>
 

@@ -42,6 +42,7 @@ export class PostsService {
       },
       include: {
         tags: true,
+        owner: true,
       },
     });
     return post;
