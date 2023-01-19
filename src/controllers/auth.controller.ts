@@ -7,7 +7,9 @@ export class AuthController {
   constructor(private readonly usersService: UsersService) {}
 
   getRegister(_req: Request, res: Response) {
-    res.render('register');
+    res.render('register', {
+      css: ['auth.css']
+    });
   }
 
   async register(req: Request, res: Response, next: NextFunction) {
@@ -24,7 +26,9 @@ export class AuthController {
   }
 
   getLogin(_req: Request, res: Response) {
-    res.render('login');
+    res.render('login', {
+      css: ['auth.css']
+    });
   }
 
   login(_req: Request, res: Response) {

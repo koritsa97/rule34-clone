@@ -1,0 +1,17 @@
+.title {
+	text-align: center;
+	margin: 24px 0;
+}
+
+.auth-form {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 12px;
+	max-width: 350px;
+	margin: 0 auto;
+}
+
+.auth-form .form-input {
+	width: 100%;
+}
