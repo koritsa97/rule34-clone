@@ -44,11 +44,11 @@ app.engine(
   engine({
     extname: 'hbs',
     helpers: {
-      ifEquals(arg1, arg2) {
+      ifEquals(arg1: any, arg2: any) {
         return arg1 === arg2;
-      }
-    }
-  }),
+      },
+    },
+  })
 );
 app.set('view engine', 'hbs');
 app.set('views', './views');
