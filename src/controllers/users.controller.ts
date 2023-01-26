@@ -12,11 +12,13 @@ export class UsersController {
 
   async getAccount(req: Request, res: Response, next: NextFunction) {
     try {
-      const authUser = req.user as User & {
-        favoritePosts: Post[];
-        favoriteTags: Tag[];
-        uploads: Post[];
-      } | undefined;
+      const authUser = req.user as
+        | (User & {
+            favoritePosts: Post[];
+            favoriteTags: Tag[];
+            uploads: Post[];
+          })
+        | undefined;
 
       const user = await this.usersService.findOneById(+req.params.id);
 
@@ -29,7 +31,6 @@ export class UsersController {
       console.log(isAuthorized);
 
       res.render('account', {
-        css: ['account.css'],
         user,
         isAuthorized,
       });

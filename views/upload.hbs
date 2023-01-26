@@ -1,18 +1,33 @@
-<h1>Upload</h1>
-<form action="/upload" method="post" enctype="multipart/form-data">
-  <label>Image File</label><br>
-  <input type="file" name="image" id="imageInput" accept="image/*">
-  <br><br>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h1>Upload</h1>
 
-  <label>Source</label><br>
-  <input type="text" name="sourceUrl" id="sourceInput" placeholder="Source">
-  <br><br>
+      <form action="/upload" method="post" enctype="multipart/form-data">
+        <div class="mb-1">
+          <img id="imagePreview" class="d-none w-25 rounded">
+        </div>
 
-  <label>Tags separated with spaces. (ex: long_hair green_hair)</label><br>
-  <input type="text" name="tags" id="tagsInput" placeholder="Tags separated with spaces">
-  <br><br>
+        <div class="mb-3">
+          <label class="form-label">Image File</label>
+          <input type="file" name="image" id="imageInput" accept="image/*" class="form-control">
+        </div>
 
-  <button type="submit">Upload</button>
-</form>
 
-<script src="/scripts/upload.js"></script>
+        <div class="mb-3">
+          <label class="form-label">Source</label>
+          <input type="url" name="sourceUrl" id="sourceInput" placeholder="Source" class="form-control">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Tags separated with spaces. (ex: long_hair green_hair)</label>
+          <input type="text" name="tags" id="tagsInput" placeholder="Tags separated with spaces" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Upload</button>
+      </form>
+
+      <script src="/scripts/upload.js"></script>
+    </div>
+  </div>
+</div>

@@ -1,75 +1,58 @@
-<div class="navbar">
-  <nav class="nav">
-    <ul class="nav-list">
-      <li class="nav-list-item">
-        <a
-          href="/"
-          class="nav-link{{#if (ifEquals @exphbs.view 'home')}} nav-link-active{{else}}{{/if}}"
-        >
-          Home
-        </a>
-      </li>
-      <li class="nav-list-item">
-        <a
-          href="/posts"
-          class="nav-link{{#if (ifEquals @exphbs.view 'posts')}} nav-link-active{{else}}{{/if}}"
-        >
-          Posts
-        </a>
-      </li>
-      {{#if user}}
-      <li class="nav-list-item">
-        <a
-          href="/feed"
-          class="nav-link{{#if (ifEquals @exphbs.view 'feed')}} nav-link-active{{else}}{{/if}}"
-        >
-          Feed
-        </a>
-      </li>
-      <li class="nav-list-item">
-        <a
-          href="/upload"
-          class="nav-link{{#if (ifEquals @exphbs.view 'upload')}} nav-link-active{{else}}{{/if}}"
-        >
-          Upload
-        </a>
-      </li>
-      <li class="nav-list-item">
-        <a
-          href="/account/{{user.id}}"
-          class="nav-link{{#if (ifEquals @exphbs.view 'account')}} nav-link-active{{else}}{{/if}}"
-        >
-          My Account
-        </a>
-      </li>
-      {{/if}}
-    </ul>
+<nav class="navbar navbar-expand-md bg-body-tertiary mb-3">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <div class="searchbar">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a href="/" class="nav-link{{#if (ifEquals @exphbs.view 'home')}} active{{else}}{{/if}}">
+            Home
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/posts" class="nav-link{{#if (ifEquals @exphbs.view 'posts')}} active{{else}}{{/if}}">
+            Posts
+          </a>
+        </li>
+        {{#if user}}
+        <li class="nav-item">
+          <a href="/feed" class="nav-link{{#if (ifEquals @exphbs.view 'feed')}} active{{else}}{{/if}}">
+            Feed
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/upload" class="nav-link{{#if (ifEquals @exphbs.view 'upload')}} active{{else}}{{/if}}">
+            Upload
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/account/{{user.id}}"
+            class="nav-link{{#if (ifEquals @exphbs.view 'account')}} active{{else}}{{/if}}">
+            My Account
+          </a>
+        </li>
+        {{/if}}
+      </ul>
+
       {{> searchbar }}
+
+      {{#unless user}}
+      <ul class="navbar-nav ms-3">
+        <li class="nav-item">
+          <a href="/login" class="nav-link{{#if (ifEquals @exphbs.view 'login')}} active{{else}}{{/if}}">
+            Login
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="/register" class="nav-link{{#if (ifEquals @exphbs.view 'register')}} active{{else}}{{/if}}">
+            Register
+          </a>
+        </li>
+      </ul>
+      {{/unless}}
     </div>
-
-    {{#unless user}}
-    <ul class="nav-list nav-list-auth">
-      <li class="nav-list-item">
-        <a
-          href="/login"
-          class="nav-link{{#if (ifEquals @exphbs.view 'login')}} nav-link-active{{else}}{{/if}}"
-        >
-          Login
-        </a>
-      </li>
-      <li class="nav-list-item">
-        <a
-          href="/register"
-          class="nav-link{{#if (ifEquals @exphbs.view 'register')}} nav-link-active{{else}}{{/if}}"
-        >
-          Register
-        </a>
-      </li>
-    </ul>
-    {{/unless}}
-  </nav>
-
-  {{> tags-list }}
-</div>
+  </div>
+</nav>

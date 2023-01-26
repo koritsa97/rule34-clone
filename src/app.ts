@@ -47,6 +47,9 @@ app.engine(
       ifEquals(arg1: any, arg2: any) {
         return arg1 === arg2;
       },
+      ifNotEquals(arg1: any, arg2: any) {
+        return arg1 !== arg2;
+      },
     },
   })
 );
@@ -68,8 +71,6 @@ app.use(passport.session());
 
 app.get('/', (req, res) => {
   res.render('home', {
-    css: ['home.css'],
-    layout: 'home',
     user: req.user,
   });
 });

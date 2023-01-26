@@ -1,20 +1,50 @@
-<h1>{{user.username}}</h1>
-{{#if isAuthorized}}
-<a href="/account//settings">Settings</a>
-<a href="/logout">Logout</a>
-{{/if}}
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="mb-3">
+        <h1>{{user.username}}</h1>
+        {{#if isAuthorized}}
+        <a href="/account/settings" class="btn btn-secondary">Settings</a>
+        <a href="/logout" class="btn btn-danger">Logout</a>
+        {{/if}}
+      </div>
 
-<h2>Favorite tags</h2>
-<ul class="favorite-tags-list">
-  {{#each user.favoriteTags}}
-  <li class="favorite-tags-item favorite-tags-item-{{this.type}}">
-    <a href="/posts?query={{this.name}}">{{this.name}}</a>
-  </li>
-  {{/each}}
-</ul>
+      <div class="mb-3">
+        <h2>Favorite tags</h2>
+        <div class="d-flex flex-wrap gap-1">
+          {{#each user.favoriteTags}}
+          <a class="btn btn-secondary btn-sm text-decoration-none" href="/posts?query={{this.name}}">
+            {{this.name}}
+          </a>
+          {{/each}}
+        </div>
+      </div>
 
-<h2>Favorite posts</h2>
-{{> posts-list posts=user.favoritePosts }}
+      <div class="mb-3">
+        <h2>Favorite posts</h2>
+        <div class="row g-3">
+          {{#each user.favoritePosts}}
+          <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
+            <a href="/posts/{{this.id}}">
+              <img src="{{this.previewUrl}}" alt="{{this.tagsString}}" class="img-fluid w-100">
+            </a>
+          </div>
+          {{/each}}
+        </div>
+      </div>
 
-<h2>Uploads</h2>
-{{> posts-list posts=user.uploads }}
+      <div>
+        <h2>Uploads</h2>
+        <div class="row g-3">
+          {{#each user.uploads}}
+          <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
+            <a href="/posts/{{this.id}}">
+              <img src="{{this.previewUrl}}" alt="{{this.tagsString}}" class="img-fluid w-100">
+            </a>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

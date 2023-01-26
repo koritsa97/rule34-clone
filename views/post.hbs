@@ -1,15 +1,62 @@
-<aside class="sidebar">
-  {{> tags-list tags=post.tags }}
+<style>
+  .preview-container {
+    max-height: calc(100vh - 64px - 32px);
+    min-height: 500px;
+    height: 100%;
+  }
 
-  <p>Uploaded by: <a href="/account/{{post.owner.id}}">{{post.owner.username}}</a></p>
+  .preview-image {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
 
-  <a href="{{post.originalUrl}}" target="_blank">View Original</a>
-  <br><br>
-  <button type="button" id="favoriteBtn" data-postid="{{post.id}}">Add to favorites</button>
-</aside>
+  @media (max-width: 767px) {
+    .preview-container {
+      max-height: unset;
+      min-height: unset;
+      height: auto;
+    }
 
-<main class="content">
-  <img src="{{post.previewUrl}}" alt="{{post.tagsString}}" class="preview">
-</main>
+    .preview-image {
+      display: inline-block;
+      width: auto;
+      height: auto;
+      max-height: unset;
+      object-fit: contain;
+    }
+  }
+</style>
+<div class="container-sm">
+  <div class="row">
+    <div class="col-md-3 col-12 order-md-1 order-2">
+      <div class="mb-1">
+        <span>Uploaded by:</span>
+        <a href="/account/{{post.owner.id}}" class="text-break">
+          {{post.owner.username}}
+        </a>
+      </div>
+      <a href="{{post.originalUrl}}" target="_blank" class="d-block mb-3">View Original</a>
+      <button type="button" id="favoriteBtn" data-postid="{{post.id}}" class="btn btn-sm btn-primary mb-3">
+        Add to favorites
+      </button>
+
+      <h3>Tags</h3>
+      <div>
+        {{#each post.tags}}
+        <a href="/posts?query={{this.name}}" class="btn btn-secondary btn-sm mb-1 text-truncate mw-100"
+          title="{{this.name}}">{{this.name}}</a>
+        {{/each}}
+      </div>
+    </div>
+    <div class="col-md-9 col-12 order-md-2 order-1 mb-md-0 mb-3">
+      <div class="preview-container">
+        <img src="{{post.previewUrl}}" alt="{{post.tagsString}}" class="preview-image">
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="/scripts/post.js"></script>

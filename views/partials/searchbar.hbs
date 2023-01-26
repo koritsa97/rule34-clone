@@ -1,7 +1,9 @@
-<form action="/posts" method="get" class="search-form">
-  <div class="form-field tags-field">
-    <input type="search" placeholder="Search" name="query" class="form-input tags-input">
-    <ul class="tags-autocomplete" hidden></ul>
+<form action="/posts" method="get">
+  <div class="input-group">
+    <div>
+      <input type="search" placeholder="Search" name="query" class="form-control">
+      <ul class="tags-autocomplete" hidden></ul>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
   </div>
-  <button type="submit" class="btn btn-primary search-btn">Search</button>
 </form>

@@ -24,7 +24,6 @@ export class PostsController {
         );
 
         res.render('posts', {
-          css: ['posts.css'],
           posts,
           tags,
           user,
@@ -43,8 +42,9 @@ export class PostsController {
         posts.flatMap((post) => post.tags)
       );
 
+      console.log(tags.length, tags.slice(0, 10).length);
+
       res.render('posts', {
-        css: ['posts.css'],
         posts,
         tags,
         user,
@@ -86,7 +86,6 @@ export class PostsController {
       }
 
       res.render('post', {
-        css: ['post.css'],
         post,
         user,
       });

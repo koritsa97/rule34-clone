@@ -10,7 +10,6 @@ const tagsService = new TagsService();
 const usersService = new UsersService();
 const usersController = new UsersController(tagsService, usersService);
 
-router.get('/account/:id', usersController.getAccount.bind(usersController));
 router.get(
   '/account/settings',
   auth,
@@ -21,5 +20,6 @@ router.post(
   auth,
   usersController.updateSettings.bind(usersController)
 );
+router.get('/account/:id', usersController.getAccount.bind(usersController));
 
 export default router;
