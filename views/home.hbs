@@ -1,27 +1,23 @@
 <div class="container">
-  <div class="row">
-    <div class="col">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
       <img src="/images/header2.png" alt="Header" class="w-100">
       <p class="text-center my-1">Rule#34: If it exists there is porn of it. If not, start uploading.</p>
-
       <nav class="nav justify-content-center">
         <a href="/posts" class="nav-link">Posts</a>
         {{#if user}}
-        <a href="/account/{{user.id}}" class="nav-link">My Accout</a>
+        <a href="/account/{{user.id}}" class="nav-link">My Account</a>
         {{/if}}
         {{#unless user}}
         <a href="/login" class="nav-link">Login</a>
         <a href="/register" class="nav-link">Register</a>
         {{/unless}}
       </nav>
+      </>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-sm-8">
+        {{> searchbar }}
+      </div>
     </div>
   </div>
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <form action="/posts" method="get" class="input-group">
-        <input type="search" name="query" id="queryInput" placeholder="Search" class="form-control">
-        <button type="submit" class="btn btn-primary">Search</button>
-      </form>
-    </div>
-  </div>
-</div>

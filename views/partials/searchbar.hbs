@@ -1,9 +1,23 @@
-<form action="/posts" method="get">
-  <div class="input-group">
-    <div>
-      <input type="search" placeholder="Search" name="query" class="form-control">
-      <ul class="tags-autocomplete" hidden></ul>
-    </div>
-    <button type="submit" class="btn btn-primary">Search</button>
-  </div>
+<style>
+  .searchbar {
+    position: relative;
+  }
+
+  .searchbar .list-group {
+    position: absolute;
+    top: 100%;
+    z-index: 99;
+  }
+</style>
+
+<form action="/posts" method="get" class="input-group searchbar" id="searchbar">
+  <input type="text" role="search" placeholder="Search" name="query" class="form-control" autocomplete="off">
+  <div class="list-group" hidden></div>
+  <button type="submit" class="btn btn-primary">Search</button>
 </form>
+
+<script defer type="module">
+  import { TagsAutocomplete } from '/scripts/autocomplete.js';
+
+  new TagsAutocomplete('#searchbar');
+</script>
