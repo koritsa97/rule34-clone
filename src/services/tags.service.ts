@@ -5,8 +5,15 @@ import { CreateTagDto } from '@/types/tags.dto';
 
 export class TagsService {
   getUniqueTags(tags: Tag[]): Tag[] {
-    const tagsSet = new Set(tags);
-    return Array.from(tagsSet);
+    const tagsSet: Tag[] = tags.reduce<Tag[]>((prev, tag) => {
+      if (!prev.find(({ id }) => tag.id === id)) {
+        return [...prev, tag];
+      }
+
+      return prev;
+    }, []);
+
+    return tagsSet;
   }
 
   async findOneByName(name: string): Promise<Tag | null> {
