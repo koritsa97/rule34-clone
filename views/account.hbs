@@ -24,7 +24,7 @@
         <h2>Favorite posts</h2>
         <div class="row g-3">
           {{#each user.favoritePosts}}
-          <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
+          <div class="col-xl-2 col-lg-3 col-md-4 col-6">
             <a href="/posts/{{this.id}}">
               <img src="{{this.previewUrl}}" alt="{{this.tagsString}}" class="img-fluid w-100">
             </a>
@@ -37,7 +37,7 @@
         <h2>Uploads</h2>
         <div class="row g-3">
           {{#each user.uploads}}
-          <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12">
+          <div class="col-xl-2 col-lg-3 col-md-4 col-6">
             <a href="/posts/{{this.id}}">
               <img src="{{this.previewUrl}}" alt="{{this.tagsString}}" class="img-fluid w-100">
             </a>
