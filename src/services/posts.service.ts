@@ -13,6 +13,9 @@ export class PostsService {
       include: {
         tags: true,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
     return posts;
   }
@@ -30,6 +33,9 @@ export class PostsService {
       },
       include: {
         tags: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
     return posts;
@@ -55,6 +61,9 @@ export class PostsService {
           in: ids,
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
     return posts;
   }
@@ -65,6 +74,9 @@ export class PostsService {
         owner: {
           id: ownerId,
         },
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
     return posts;
