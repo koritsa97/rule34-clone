@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from 'express';
 import { TagsService } from '@/services/tags.service';
 import { UsersService } from '@/services/users.service';
 import { Post, Tag, User } from '@prisma/client';
+import { UpdateUserDto } from '@/types/users.dto';
 
 export class UsersController {
   constructor(
@@ -58,26 +59,24 @@ export class UsersController {
 
   async updateSettings(req: Request, res: Response, next: NextFunction) {
     try {
-      let { favoriteTags } = req.body as { favoriteTags: string };
+      let { favoriteTags, ...data } = req.body as {
+        favoriteTags: string;
+      } & UpdateUserDto;
       favoriteTags = favoriteTags.toLowerCase().trim();
 
       const user = req.user as User;
-
-      if (favoriteTags === '') {
-        res.redirect('/account/settings');
-        return;
-      }
 
       const tags = await this.tagsService.findManyByNames(
         favoriteTags.split(' ')
       );
 
-      await this.usersService.updateFavoriteTags(
+      await this.usersService.update(
         user.id,
-        tags.map(({ id }) => id)
+        tags.map(({ id }) => id),
+        data
       );
 
-      res.redirect('/account/settings');
+      res.redirect(`/account/${user.id}`);
     } catch (error) {
       next(error);
     }

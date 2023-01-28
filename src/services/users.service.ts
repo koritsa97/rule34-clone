@@ -1,5 +1,5 @@
 import { prisma } from '@/config/prisma';
-import { CreateUserDto } from '@/types/users.dto';
+import { CreateUserDto, UpdateUserDto } from '@/types/users.dto';
 
 export class UsersService {
   async create(data: CreateUserDto) {
@@ -23,7 +23,7 @@ export class UsersService {
     });
   }
 
-  async updateFavoriteTags(userId: number, tagsIds: number[]) {
+  async update(userId: number, tagsIds: number[], data: UpdateUserDto) {
     return prisma.user.update({
       where: {
         id: userId,
@@ -32,6 +32,8 @@ export class UsersService {
         favoriteTags: {
           set: tagsIds.map((id) => ({ id })),
         },
+        username: data.username,
+        password: data.password,
       },
     });
   }

@@ -52,7 +52,7 @@ describe('Users service', () => {
   test('should update favorite tags', async () => {
     const userId = 1;
     const tagsIds = [1, 2, 3];
-    await service.updateFavoriteTags(userId, tagsIds);
+    await service.update(userId, tagsIds);
     expect(prisma.user.update).toBeCalledWith({
       where: {
         id: userId,
