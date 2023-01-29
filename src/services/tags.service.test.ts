@@ -1,9 +1,9 @@
-import { PrismaClient, Prisma, Tag } from '@prisma/client';
+import { PrismaClient, Tag } from '@prisma/client';
 import { mockDeep } from 'jest-mock-extended';
 
 import { TagsService } from './tags.service';
-import { prisma } from '@/config/prisma';
-import { CreateTagDto } from '@/types/tags.dto';
+import { prisma } from '../config/prisma';
+import { CreateTagDto } from '../types/tags.dto';
 
 jest.mock('../config/prisma.ts', () => {
   return {

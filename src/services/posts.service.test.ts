@@ -1,12 +1,10 @@
-import { PrismaClient, Prisma, Post } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { mockDeep } from 'jest-mock-extended';
 import { v2 as cloudinary } from 'cloudinary';
 import fs from 'fs/promises';
-import { Jimp as JimpType } from '@jimp/core';
-import * as Jimp from 'jimp';
 
 import { PostsService } from './posts.service';
-import { prisma } from '@/config/prisma';
+import { prisma } from '../config/prisma';
 
 jest.mock('../config/prisma.ts', () => {
   return {
@@ -25,21 +23,10 @@ jest.mock('cloudinary', () => {
   return {
     v2: {
       uploader: {
-        upload: jest.fn((path) => ({ secure_url: path })),
+        upload: jest.fn((path) => ({ secure_url: path, public_id: path })),
       },
+      url: jest.fn((path) => path),
     },
-  };
-});
-
-jest.mock('jimp', () => {
-  return {
-    _esModule: true,
-    ...mockDeep<JimpType>(),
-    read: jest.fn().mockReturnValue({
-      scaleToFit: jest.fn().mockReturnThis(),
-      quality: jest.fn().mockReturnThis(),
-      writeAsync: jest.fn().mockReturnThis(),
-    }),
   };
 });
 
@@ -59,6 +46,9 @@ describe('Tags service', () => {
     const tagIds = [1, 2, 3];
     await service.findManyByTags(tagIds);
     expect(prisma.post.findMany).toBeCalledWith({
+      orderBy: {
+        createdAt: 'desc',
+      },
       where: {
         tags: {
           some: {
@@ -91,6 +81,9 @@ describe('Tags service', () => {
     const ids = [1, 2, 3];
     await service.findManyByIds(ids);
     expect(prisma.post.findMany).toBeCalledWith({
+      orderBy: {
+        createdAt: 'desc',
+      },
       where: {
         id: {
           in: ids,
@@ -102,6 +95,9 @@ describe('Tags service', () => {
   test('should find posts by owner', async () => {
     await service.findManyByOwner(1);
     expect(prisma.post.findMany).toBeCalledWith({
+      orderBy: {
+        createdAt: 'desc',
+      },
       where: {
         owner: {
           id: 1,
@@ -122,27 +118,12 @@ describe('Tags service', () => {
   });
 
   test('should upload images to cloudinary', async () => {
-    const { originalUrl, previewUrl } = await service.uploadImages(
-      'images/img1.png',
-      'images/im1_preview.png'
-    );
+    const imagePath = 'images/img1.png';
+    const { originalUrl, previewUrl } = await service.uploadImage(imagePath);
 
     expect(originalUrl).toBeDefined();
     expect(previewUrl).toBeDefined();
-    expect(cloudinary.uploader.upload).toHaveBeenNthCalledWith(
-      1,
-      'images/img1.png'
-    );
-    expect(cloudinary.uploader.upload).toHaveBeenNthCalledWith(
-      2,
-      'images/im1_preview.png'
-    );
-    expect(fs.rm).toHaveBeenNthCalledWith(1, 'images/img1.png');
-    expect(fs.rm).toHaveBeenNthCalledWith(2, 'images/im1_preview.png');
-  });
-
-  test('should create preview image', async () => {
-    const res = await service.createPreviewImage('images/img1.png');
-    expect(res).toBe('images/img1_preview.png');
+    expect(cloudinary.uploader.upload).toHaveBeenCalledWith(imagePath);
+    expect(fs.rm).toHaveBeenCalledWith(imagePath);
   });
 });

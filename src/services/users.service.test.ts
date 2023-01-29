@@ -1,7 +1,7 @@
 import { mockDeep } from 'jest-mock-extended';
 import { PrismaClient, Prisma } from '@prisma/client';
 
-import { prisma } from '@/config/prisma';
+import { prisma } from '../config/prisma';
 import { UsersService } from './users.service';
 
 jest.mock('../config/prisma.ts', () => {
