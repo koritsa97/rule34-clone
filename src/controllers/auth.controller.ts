@@ -2,22 +2,34 @@ import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
 
 import { UsersService } from '@/services/users.service';
+import { CreateUserDto } from '@/types/users.dto';
 
 export class AuthController {
   constructor(private readonly usersService: UsersService) {}
 
-  getRegister(_req: Request, res: Response) {
-    res.render('register');
+  getRegister(req: Request, res: Response) {
+    const error = req.flash('error');
+    res.render('register', {
+      error,
+    });
   }
 
   async register(req: Request, res: Response, next: NextFunction) {
     try {
-      await this.usersService.create(req.body);
+      const data = req.body as CreateUserDto;
 
-      passport.authenticate('local', {
-        failureRedirect: '/login',
-        successRedirect: '/posts',
-      })(req, res, next);
+      const existingUser = await this.usersService.findOneByUsername(
+        data.username
+      );
+      if (existingUser) {
+        req.flash('error', 'Username is already taken');
+        res.redirect('/register');
+        return;
+      }
+
+      await this.usersService.create(data);
+
+      this.login(req, res, next);
     } catch (error) {
       next(error);
     }
@@ -36,7 +48,15 @@ export class AuthController {
         req.flash('error', error);
         res.redirect('/login');
       } else {
-        res.redirect('/posts');
+        req.logIn(user, (loginError) => {
+          if (loginError) {
+            console.log(loginError);
+            req.flash('error', loginError);
+            res.redirect('/login');
+          } else {
+            res.redirect('/posts');
+          }
+        });
       }
     })(req, res, next);
   }
