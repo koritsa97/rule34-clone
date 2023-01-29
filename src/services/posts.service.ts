@@ -1,11 +1,10 @@
 import fs from 'fs/promises';
-import Jimp from 'jimp';
 import { v2 as cloudinary } from 'cloudinary';
-import path from 'path';
-import { Post, Prisma, Tag } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 import { prisma } from '@/config/prisma';
 import { CreatePostDto } from '@/types/posts.dto';
+import { ImageWidth } from '@/utils/constants';
 
 export class PostsService {
   async findAll() {
@@ -116,24 +115,17 @@ export class PostsService {
     return post;
   }
 
-  async uploadImages(originalImagePath: string, previewImagePath: string) {
-    const originalRes = await cloudinary.uploader.upload(originalImagePath);
+  async uploadImage(originalImagePath: string) {
+    const uploadResponse = await cloudinary.uploader.upload(originalImagePath);
     await fs.rm(originalImagePath);
-    const previewRes = await cloudinary.uploader.upload(previewImagePath);
-    await fs.rm(previewImagePath);
+
+    const previewUrl = cloudinary.url(uploadResponse.public_id, {
+      width: ImageWidth.PREVIEW,
+    });
 
     return {
-      originalUrl: originalRes.secure_url,
-      previewUrl: previewRes.secure_url,
+      originalUrl: uploadResponse.secure_url,
+      previewUrl,
     };
-  }
-
-  async createPreviewImage(originalImagePath: string) {
-    const ext = path.extname(originalImagePath);
-    const previewImagePath = originalImagePath.replace(ext, '_preview' + ext);
-
-    const image = await Jimp.read(originalImagePath);
-    await image.scaleToFit(420, 640).quality(50).writeAsync(previewImagePath);
-    return previewImagePath;
   }
 }

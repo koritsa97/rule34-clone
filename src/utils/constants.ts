@@ -19,3 +19,7 @@ export const ModelRef = {
 
 export const PUBLIC_DIR = path.join(process.cwd(), 'public');
 export const UPLOADS_DIR = path.join(PUBLIC_DIR, 'uploads');
+
+export const ImageWidth = {
+  PREVIEW: 1000,
+};

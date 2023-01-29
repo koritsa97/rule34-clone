@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Tag, User } from '@prisma/client';
+import { v2 as cloudinary } from 'cloudinary';
 
 import { PostsService } from '@/services/posts.service';
 import { TagsService } from '@/services/tags.service';
@@ -41,8 +42,6 @@ export class PostsController {
       const tags = this.tagsService.getUniqueTags(
         posts.flatMap((post) => post.tags)
       );
-
-      console.log(tags.length, tags.slice(0, 10).length);
 
       res.render('posts', {
         posts,
@@ -127,12 +126,8 @@ export class PostsController {
         .trim()
         .split(' ');
 
-      const previewImagePath = await this.postsService.createPreviewImage(
+      const { originalUrl, previewUrl } = await this.postsService.uploadImage(
         req.file.path
-      );
-      const { originalUrl, previewUrl } = await this.postsService.uploadImages(
-        req.file.path,
-        previewImagePath
       );
 
       await this.postsService.create({
