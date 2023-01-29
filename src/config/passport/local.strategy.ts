@@ -16,7 +16,7 @@ export const localStrategy = new Strategy(async (username, password, cb) => {
       },
     });
     if (!user) {
-      cb(null, false);
+      cb('Wrong credentials', false);
     } else {
       cb(null, user);
     }

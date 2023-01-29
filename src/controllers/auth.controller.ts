@@ -23,12 +23,22 @@ export class AuthController {
     }
   }
 
-  getLogin(_req: Request, res: Response) {
-    res.render('login');
+  getLogin(req: Request, res: Response) {
+    const error = req.flash('error');
+    res.render('login', {
+      error,
+    });
   }
 
-  login(_req: Request, res: Response) {
-    res.redirect('/posts');
+  login(req: Request, res: Response, next: NextFunction) {
+    passport.authenticate('local', (error, user) => {
+      if (error || !user) {
+        req.flash('error', error);
+        res.redirect('/login');
+      } else {
+        res.redirect('/posts');
+      }
+    })(req, res, next);
   }
 
   logout(req: Request, res: Response) {

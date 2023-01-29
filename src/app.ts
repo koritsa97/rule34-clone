@@ -7,6 +7,7 @@ import session from 'express-session';
 import ConnectMongoDBSession from 'connect-mongodb-session';
 import fs from 'fs';
 import { v2 as cloudinary } from 'cloudinary';
+import flash from 'connect-flash';
 
 import '@/config/passport';
 import { PUBLIC_DIR, UPLOADS_DIR } from '@/utils/constants';
@@ -68,6 +69,7 @@ app.use(
   })
 );
 app.use(passport.session());
+app.use(flash());
 
 app.get('/', (req, res) => {
   res.render('home', {
