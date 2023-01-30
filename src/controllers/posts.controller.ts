@@ -96,6 +96,7 @@ export class PostsController {
 
       const post = await this.postsService.findOneById(+id);
       if (!post) {
+        req.flash('message', ['danger', `Post with id ${id} not found`]);
         res.redirect('/posts');
         return;
       }
