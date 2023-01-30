@@ -29,13 +29,18 @@
           <label class="form-label" for="tagsInput">
             Tags separated with spaces. (ex: long_hair green_hair)
           </label>
-          <textarea
-            type="text"
-            name="tags"
-            id="tagsInput"
-            placeholder="Tags separated with spaces"
-            class="form-control"
-          >{{post.tagsString}}</textarea>
+          <div id="tags">
+            <input
+              type="text"
+              name="tags"
+              id="tagsInput"
+              placeholder="Tags separated with spaces"
+              class="form-control"
+              autocomplete="off"
+              value="{{post.tagsString}}"
+            >
+            <div class="list-group" hidden></div>
+          </div>
         </div>
 
         <button type="submit" class="btn btn-primary">Upload</button>
@@ -43,3 +48,9 @@
     </div>
   </div>
 </div>
+
+<script defer type="module">
+  import { TagsAutocomplete } from '/scripts/autocomplete.js';
+
+  new TagsAutocomplete('#tags');
+</script>

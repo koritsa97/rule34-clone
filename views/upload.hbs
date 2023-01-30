@@ -9,25 +9,56 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label">Image File</label>
-          <input type="file" name="image" id="imageInput" accept="image/*" class="form-control">
+          <label class="form-label" for="imageInput">Image File</label>
+          <input
+            type="file"
+            name="image"
+            id="imageInput"
+            accept="image/*"
+            class="form-control"
+            required
+          >
         </div>
 
 
         <div class="mb-3">
-          <label class="form-label">Source</label>
-          <input type="url" name="sourceUrl" id="sourceInput" placeholder="Source" class="form-control">
+          <label class="form-label" for="sourceInput">Source</label>
+          <input
+            type="url"
+            name="sourceUrl"
+            id="sourceInput"
+            placeholder="Source"
+            class="form-control"
+          >
         </div>
 
         <div class="mb-3">
-          <label class="form-label">Tags separated with spaces. (ex: long_hair green_hair)</label>
-          <input type="text" name="tags" id="tagsInput" placeholder="Tags separated with spaces" class="form-control">
+          <label class="form-label" for="tagsInput">
+            Tags separated with spaces. (ex: long_hair green_hair)
+          </label>
+          <div id="tags">
+            <input
+              type="text"
+              name="tags"
+              id="tagsInput"
+              placeholder="Tags separated with spaces"
+              class="form-control"
+              autocomplete="off"
+            >
+            <div class="list-group" hidden></div>
+          </div>
         </div>
 
         <button type="submit" class="btn btn-primary">Upload</button>
       </form>
 
-      <script src="/scripts/upload.js"></script>
     </div>
   </div>
 </div>
+
+<script src="/scripts/upload.js"></script>
+<script defer type="module">
+  import { TagsAutocomplete } from '/scripts/autocomplete.js';
+
+  new TagsAutocomplete('#tags');
+</script>
