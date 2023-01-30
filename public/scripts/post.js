@@ -1,6 +1,6 @@
 const favoriteBtn = document.querySelector('#favoriteBtn');
 
-favoriteBtn.onclick = (e) => {
+favoriteBtn?.addEventListener('click', (e) => {
   const postId = e.target.dataset.postid;
 
   favoriteBtn.disabled = true;
@@ -8,14 +8,13 @@ favoriteBtn.onclick = (e) => {
     method: 'PATCH',
   })
     .then((res) => res.text())
-    .then((data) => {
-      console.log(data);
+    .then(() => {
       favoriteBtn.insertAdjacentHTML(
         'beforebegin',
         '<p>Added to favorites</p>'
       );
     })
     .finally(() => {
-      favoriteBtn.disabled = false;
+      favoriteBtn.remove();
     });
-};
+});

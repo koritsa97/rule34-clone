@@ -65,9 +65,18 @@
 
 
       <a href="{{post.originalUrl}}" target="_blank" class="d-block mb-3">View Original</a>
-      <button type="button" id="favoriteBtn" data-postid="{{post.id}}" class="btn btn-sm btn-primary mb-3">
-        Add to favorites
-      </button>
+      {{#if user}}
+        {{#unless isFavorited}}
+          <button
+            type="button"
+            id="favoriteBtn"
+            data-postid="{{post.id}}"
+            class="btn btn-sm btn-primary mb-3"
+          >
+            Add to favorites
+          </button>
+        {{/unless}}
+      {{/if}}
 
       <h3>Tags</h3>
       <div>

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { Tag, User } from '@prisma/client';
+import { Post, Tag, User } from '@prisma/client';
 
 import { PostsService } from '@/services/posts.service';
 import { TagsService } from '@/services/tags.service';
@@ -83,7 +83,7 @@ export class PostsController {
   async getPostById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params as { id: string };
-      const user = req.user as User | undefined;
+      const user = req.user as (User & { favoritePosts: Post[] }) | undefined;
 
       const post = await this.postsService.findOneById(+id);
       if (!post) {
@@ -99,6 +99,7 @@ export class PostsController {
         user,
         error: errorMessage,
         info: infoMessage,
+        isFavorited: !!user?.favoritePosts.find((post) => post.id === +id),
       });
     } catch (error) {
       next(error);
