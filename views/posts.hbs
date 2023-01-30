@@ -1,16 +1,8 @@
 <div class="container">
-  {{#if info}}
+  {{#if message}}
   <div class="row justify-content-center">
     <div class="col-lg-5">
-      <div class="alert alert-info">{{info}}</div>
-    </div>
-  </div>
-  {{/if}}
-
-  {{#if error}}
-  <div class="row justify-content-center">
-    <div class="col-lg-5">
-      <div class="alert alert-danger">{{error}}</div>
+      <div class="alert alert-{{message.type}}">{{message.text}}</div>
     </div>
   </div>
   {{/if}}

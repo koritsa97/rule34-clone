@@ -18,8 +18,7 @@ export class PostsController {
       const { query } = req.query as { query: string };
       const user = req.user as User | undefined;
 
-      const infoMessage = req.flash('info');
-      const errorMessage = req.flash('error');
+      const message = req.flash('message');
 
       if (!query) {
         const posts = await this.postsService.findAll();
@@ -31,8 +30,13 @@ export class PostsController {
           posts,
           tags,
           user,
-          info: infoMessage,
-          error: errorMessage,
+          message:
+            message && message.length > 0
+              ? {
+                  type: message[0],
+                  text: message[1],
+                }
+              : null,
         });
 
         return;
@@ -52,8 +56,13 @@ export class PostsController {
         posts,
         tags,
         user,
-        info: infoMessage,
-        error: errorMessage,
+        message:
+          message && message.length > 0
+            ? {
+                type: message[0],
+                text: message[1],
+              }
+            : null,
       });
     } catch (error) {
       next(error);
@@ -91,14 +100,18 @@ export class PostsController {
         return;
       }
 
-      const errorMessage = req.flash('error');
-      const infoMessage = req.flash('info');
+      const message = req.flash('message');
 
       res.render('post', {
         post,
         user,
-        error: errorMessage,
-        info: infoMessage,
+        message:
+          message && message.length > 0
+            ? {
+                type: message[0],
+                text: message[1],
+              }
+            : null,
         isFavorited: !!user?.favoritePosts.find((post) => post.id === +id),
       });
     } catch (error) {
@@ -164,19 +177,25 @@ export class PostsController {
 
       const existingPost = await this.postsService.findOneById(postId);
       if (!existingPost) {
-        req.flash('error', `Post with id ${postId} not found`);
+        req.flash('message', ['danger', `Post with id ${postId} not found`]);
         res.redirect('/posts');
         return;
       }
 
       if (existingPost.owner.id !== user.id) {
-        req.flash('error', "You don't have rights to delete this post");
+        req.flash('message', [
+          'danger',
+          "You don't have rights to delete this post",
+        ]);
         res.redirect(`/posts/${postId}`);
         return;
       }
 
       await this.postsService.delete(postId);
-      req.flash('info', `Post with id ${postId} successfully deleted`);
+      req.flash('message', [
+        'info',
+        `Post with id ${postId} successfully deleted`,
+      ]);
       res.redirect('/posts');
     } catch (error) {
       next(error);
@@ -190,13 +209,16 @@ export class PostsController {
 
       const existingPost = await this.postsService.findOneById(postId);
       if (!existingPost) {
-        req.flash('error', `Post with id ${postId} not found`);
+        req.flash('message', ['danger', `Post with id ${postId} not found`]);
         res.redirect('/posts');
         return;
       }
 
       if (existingPost.owner.id !== user.id) {
-        req.flash('error', "You don't have rights to edit this post");
+        req.flash('message', [
+          'danger',
+          "You don't have rights to edit this post",
+        ]);
         res.redirect(`/posts/${postId}`);
         return;
       }
@@ -216,13 +238,16 @@ export class PostsController {
 
       const existingPost = await this.postsService.findOneById(postId);
       if (!existingPost) {
-        req.flash('error', `Post with id ${postId} not found`);
+        req.flash('message', ['danger', `Post with id ${postId} not found`]);
         res.redirect('/posts');
         return;
       }
 
       if (existingPost.owner.id !== user.id) {
-        req.flash('error', "You don't have rights to edit this post");
+        req.flash('message', [
+          'danger',
+          "You don't have rights to edit this post",
+        ]);
         res.redirect(`/posts/${postId}`);
         return;
       }
@@ -233,7 +258,7 @@ export class PostsController {
         previewUrl: req.body.previewUrl,
         sourceUrl: req.body.sourceUrl,
       });
-      req.flash('info', 'Post successfully updated');
+      req.flash('message', ['info', 'Post successfully updated']);
       res.redirect(`/posts/${postId}`);
     } catch (error) {
       next(error);

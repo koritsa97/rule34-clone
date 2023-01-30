@@ -8,9 +8,15 @@ export class AuthController {
   constructor(private readonly usersService: UsersService) {}
 
   getRegister(req: Request, res: Response) {
-    const error = req.flash('error');
+    const message = req.flash('message');
     res.render('register', {
-      error,
+      message:
+        message && message.length > 0
+          ? {
+              type: message[0],
+              text: message[1],
+            }
+          : null,
     });
   }
 
@@ -22,7 +28,7 @@ export class AuthController {
         data.username
       );
       if (existingUser) {
-        req.flash('error', 'Username is already taken');
+        req.flash('message', ['danger', 'Username is already taken']);
         res.redirect('/register');
         return;
       }
@@ -36,22 +42,27 @@ export class AuthController {
   }
 
   getLogin(req: Request, res: Response) {
-    const error = req.flash('error');
+    const message = req.flash('message');
     res.render('login', {
-      error,
+      message:
+        message && message.length > 0
+          ? {
+              type: message[0],
+              text: message[1],
+            }
+          : null,
     });
   }
 
   login(req: Request, res: Response, next: NextFunction) {
     passport.authenticate('local', (error, user) => {
       if (error || !user) {
-        req.flash('error', error);
+        req.flash('message', ['danger', error]);
         res.redirect('/login');
       } else {
         req.logIn(user, (loginError) => {
           if (loginError) {
-            console.log(loginError);
-            req.flash('error', loginError);
+            req.flash('message', ['danger', loginError]);
             res.redirect('/login');
           } else {
             res.redirect('/posts');
