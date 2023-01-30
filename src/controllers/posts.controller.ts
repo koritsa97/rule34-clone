@@ -4,7 +4,6 @@ import { Post, Tag, User } from '@prisma/client';
 import { PostsService } from '@/services/posts.service';
 import { TagsService } from '@/services/tags.service';
 import { UsersService } from '@/services/users.service';
-import { UpdatePostDto } from '@/types/posts.dto';
 
 export class PostsController {
   constructor(
@@ -151,7 +150,9 @@ export class PostsController {
       const tagNames = (req.body.tags as string)
         .toLowerCase()
         .trim()
-        .split(' ');
+        .replace(',', '')
+        .split(' ')
+        .map((tagName) => tagName.trim());
 
       const { originalUrl, previewUrl } = await this.postsService.uploadImage(
         req.file.path
