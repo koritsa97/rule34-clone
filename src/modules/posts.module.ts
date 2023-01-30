@@ -32,5 +32,10 @@ router.post(
   upload.single('image'),
   postsController.uploadPost.bind(postsController)
 );
+router.get(
+  '/posts/:id/delete',
+  auth,
+  postsController.delete.bind(postsController)
+);
 
 export default router;

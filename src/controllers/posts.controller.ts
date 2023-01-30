@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import { Tag, User } from '@prisma/client';
-import { v2 as cloudinary } from 'cloudinary';
 
 import { PostsService } from '@/services/posts.service';
 import { TagsService } from '@/services/tags.service';
@@ -18,6 +17,9 @@ export class PostsController {
       const { query } = req.query as { query: string };
       const user = req.user as User | undefined;
 
+      const infoMessage = req.flash('info');
+      const errorMessage = req.flash('error');
+
       if (!query) {
         const posts = await this.postsService.findAll();
         const tags = this.tagsService.getUniqueTags(
@@ -28,6 +30,8 @@ export class PostsController {
           posts,
           tags,
           user,
+          info: infoMessage,
+          error: errorMessage,
         });
 
         return;
@@ -47,6 +51,8 @@ export class PostsController {
         posts,
         tags,
         user,
+        info: infoMessage,
+        error: errorMessage,
       });
     } catch (error) {
       next(error);
@@ -84,9 +90,12 @@ export class PostsController {
         return;
       }
 
+      const errorMessage = req.flash('error');
+
       res.render('post', {
         post,
         user,
+        error: errorMessage,
       });
     } catch (error) {
       next(error);
@@ -138,6 +147,32 @@ export class PostsController {
         ownerId: user.id,
       });
 
+      res.redirect('/posts');
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async delete(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = req.user as User;
+      const postId = +req.params.id;
+
+      const existingPost = await this.postsService.findOneById(postId);
+      if (!existingPost) {
+        req.flash('error', `Post with id ${postId} not found`);
+        res.redirect('/posts');
+        return;
+      }
+
+      if (existingPost.owner.id !== user.id) {
+        req.flash('error', "You don't have rights to deleted this post");
+        res.redirect(`/posts/${postId}`);
+        return;
+      }
+
+      await this.postsService.delete(postId);
+      req.flash('info', `Post with id ${postId} successfully deleted`);
       res.redirect('/posts');
     } catch (error) {
       next(error);

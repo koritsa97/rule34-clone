@@ -32,14 +32,29 @@
   }
 </style>
 <div class="container-sm">
+  {{#if error}}
+  <div class="row justify-content-center">
+    <div class="col-lg-5">
+      <div class="alert alert-danger">{{error}}</div>
+    </div>
+  </div>
+  {{/if}}
   <div class="row">
     <div class="col-md-3 col-12 order-md-1 order-2">
+      {{#if (ifEquals user.id post.owner.id)}}
+      <div class="mb-3">
+        <a href="/posts/{{post.id}}/edit" class="btn btn-secondary btn-sm me-1">Edit</a>
+        <a href="/posts/{{post.id}}/delete" class="btn btn-danger btn-sm">Delete</a>
+      </div>
+      {{/if}}
       <div class="mb-1">
         <span>Uploaded by:</span>
         <a href="/account/{{post.owner.id}}" class="text-break">
           {{post.owner.username}}
         </a>
       </div>
+
+
       <a href="{{post.originalUrl}}" target="_blank" class="d-block mb-3">View Original</a>
       <button type="button" id="favoriteBtn" data-postid="{{post.id}}" class="btn btn-sm btn-primary mb-3">
         Add to favorites

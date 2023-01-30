@@ -128,4 +128,12 @@ export class PostsService {
       previewUrl,
     };
   }
+
+  async delete(id: number) {
+    return prisma.post.delete({
+      where: {
+        id,
+      },
+    });
+  }
 }
