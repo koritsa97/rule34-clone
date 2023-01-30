@@ -32,6 +32,14 @@
   }
 </style>
 <div class="container-sm">
+  {{#if info}}
+  <div class="row justify-content-center">
+    <div class="col-lg-5">
+      <div class="alert alert-info">{{info}}</div>
+    </div>
+  </div>
+  {{/if}}
+
   {{#if error}}
   <div class="row justify-content-center">
     <div class="col-lg-5">
@@ -39,6 +47,7 @@
     </div>
   </div>
   {{/if}}
+  
   <div class="row">
     <div class="col-md-3 col-12 order-md-1 order-2">
       {{#if (ifEquals user.id post.owner.id)}}

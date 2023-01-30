@@ -4,6 +4,7 @@ import { Tag, User } from '@prisma/client';
 import { PostsService } from '@/services/posts.service';
 import { TagsService } from '@/services/tags.service';
 import { UsersService } from '@/services/users.service';
+import { UpdatePostDto } from '@/types/posts.dto';
 
 export class PostsController {
   constructor(
@@ -91,11 +92,13 @@ export class PostsController {
       }
 
       const errorMessage = req.flash('error');
+      const infoMessage = req.flash('info');
 
       res.render('post', {
         post,
         user,
         error: errorMessage,
+        info: infoMessage,
       });
     } catch (error) {
       next(error);
@@ -166,7 +169,7 @@ export class PostsController {
       }
 
       if (existingPost.owner.id !== user.id) {
-        req.flash('error', "You don't have rights to deleted this post");
+        req.flash('error', "You don't have rights to delete this post");
         res.redirect(`/posts/${postId}`);
         return;
       }
@@ -174,6 +177,63 @@ export class PostsController {
       await this.postsService.delete(postId);
       req.flash('info', `Post with id ${postId} successfully deleted`);
       res.redirect('/posts');
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getEditPost(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = req.user as User;
+      const postId = +req.params.id;
+
+      const existingPost = await this.postsService.findOneById(postId);
+      if (!existingPost) {
+        req.flash('error', `Post with id ${postId} not found`);
+        res.redirect('/posts');
+        return;
+      }
+
+      if (existingPost.owner.id !== user.id) {
+        req.flash('error', "You don't have rights to edit this post");
+        res.redirect(`/posts/${postId}`);
+        return;
+      }
+
+      res.render('post-edit', {
+        post: existingPost,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async editPost(req: Request, res: Response, next: NextFunction) {
+    try {
+      const user = req.user as User;
+      const postId = +req.params.id;
+
+      const existingPost = await this.postsService.findOneById(postId);
+      if (!existingPost) {
+        req.flash('error', `Post with id ${postId} not found`);
+        res.redirect('/posts');
+        return;
+      }
+
+      if (existingPost.owner.id !== user.id) {
+        req.flash('error', "You don't have rights to edit this post");
+        res.redirect(`/posts/${postId}`);
+        return;
+      }
+
+      await this.postsService.update(postId, existingPost, {
+        tags: (req.body.tags as string).split(' '),
+        originalUrl: req.body.originalUrl,
+        previewUrl: req.body.previewUrl,
+        sourceUrl: req.body.sourceUrl,
+      });
+      req.flash('info', 'Post successfully updated');
+      res.redirect(`/posts/${postId}`);
     } catch (error) {
       next(error);
     }

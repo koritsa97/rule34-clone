@@ -1,9 +1,9 @@
 import fs from 'fs/promises';
 import { v2 as cloudinary } from 'cloudinary';
-import { Prisma } from '@prisma/client';
+import { Post, Prisma, Tag, User } from '@prisma/client';
 
 import { prisma } from '@/config/prisma';
-import { CreatePostDto } from '@/types/posts.dto';
+import { CreatePostDto, UpdatePostDto } from '@/types/posts.dto';
 import { ImageWidth } from '@/utils/constants';
 
 export class PostsService {
@@ -133,6 +133,56 @@ export class PostsService {
     return prisma.post.delete({
       where: {
         id,
+      },
+    });
+  }
+
+  async update(
+    id: number,
+    existingPost: Post & { owner: User; tags: Tag[] },
+    data: UpdatePostDto
+  ) {
+    await prisma.post.update({
+      where: {
+        id,
+      },
+      data: {
+        tags: {
+          disconnect: existingPost.tags.map(
+            (tag): Prisma.TagWhereUniqueInput => ({
+              id: tag.id,
+            })
+          ),
+        },
+      },
+    });
+
+    return prisma.post.update({
+      where: {
+        id,
+      },
+      data: {
+        originalUrl: data.originalUrl,
+        previewUrl: data.previewUrl,
+        sourceUrl: data.sourceUrl,
+        tags: {
+          connectOrCreate: data.tags.map(
+            (tagName): Prisma.TagCreateOrConnectWithoutPostsInput => ({
+              where: {
+                name: tagName,
+              },
+              create: {
+                name: tagName,
+                owner: {
+                  connect: {
+                    id: existingPost.ownerId,
+                  },
+                },
+              },
+            })
+          ),
+        },
+        tagsString: data.tags.join(' '),
       },
     });
   }

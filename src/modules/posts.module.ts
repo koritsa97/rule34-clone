@@ -37,5 +37,15 @@ router.get(
   auth,
   postsController.delete.bind(postsController)
 );
+router.get(
+  '/posts/:id/edit',
+  auth,
+  postsController.getEditPost.bind(postsController)
+);
+router.post(
+  '/posts/:id/edit',
+  auth,
+  postsController.editPost.bind(postsController)
+);
 
 export default router;
