@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import passport from 'passport';
+import bcrypt from 'bcrypt';
 
 import { UsersService } from '@/services/users.service';
 import { CreateUserDto } from '@/types/users.dto';
@@ -33,7 +34,11 @@ export class AuthController {
         return;
       }
 
-      await this.usersService.create(data);
+      const hashedPassword = await bcrypt.hash(data.password, 12);
+      await this.usersService.create({
+        username: data.password,
+        password: hashedPassword,
+      });
 
       this.login(req, res, next);
     } catch (error) {

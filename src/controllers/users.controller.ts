@@ -59,9 +59,7 @@ export class UsersController {
 
   async updateSettings(req: Request, res: Response, next: NextFunction) {
     try {
-      let { favoriteTags, ...data } = req.body as {
-        favoriteTags: string;
-      } & UpdateUserDto;
+      let { favoriteTags, ...data } = req.body as UpdateUserDto;
       favoriteTags = favoriteTags.toLowerCase().trim();
 
       const user = req.user as User;

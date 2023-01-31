@@ -23,7 +23,7 @@ export class UsersService {
     });
   }
 
-  async update(userId: number, tagsIds: number[], data: UpdateUserDto) {
+  async update(userId: number, tagsIds: number[], data: { username: string }) {
     return prisma.user.update({
       where: {
         id: userId,
@@ -33,7 +33,6 @@ export class UsersService {
           set: tagsIds.map((id) => ({ id })),
         },
         username: data.username,
-        password: data.password,
       },
     });
   }

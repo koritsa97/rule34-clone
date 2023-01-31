@@ -54,7 +54,6 @@ describe('Users service', () => {
     const tagsIds = [1, 2, 3];
     await service.update(userId, tagsIds, {
       username: '',
-      password: '',
     });
     expect(prisma.user.update).toBeCalledWith({
       where: {
@@ -65,7 +64,6 @@ describe('Users service', () => {
           set: tagsIds.map((id) => ({ id })),
         },
         username: '',
-        password: '',
       },
     });
   });

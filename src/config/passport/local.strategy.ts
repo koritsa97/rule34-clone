@@ -1,11 +1,12 @@
 import { Strategy } from 'passport-local';
+import bcrypt from 'bcrypt';
 
 import { prisma } from '@/config/prisma';
 
 export const localStrategy = new Strategy(async (username, password, cb) => {
   try {
     const user = await prisma.user.findFirst({
-      where: { username, password },
+      where: { username },
       include: {
         createdTags: true,
         favoritedBy: true,
@@ -16,10 +17,17 @@ export const localStrategy = new Strategy(async (username, password, cb) => {
       },
     });
     if (!user) {
-      cb('Wrong credentials', false);
-    } else {
-      cb(null, user);
+      cb("User doesn't exists", false);
+      return;
     }
+
+    const passwordValid = await bcrypt.compare(password, user.password);
+    if (!passwordValid) {
+      cb('Wrong password', false);
+      return;
+    }
+
+    cb(null, user);
   } catch (error) {
     cb(error);
   }
