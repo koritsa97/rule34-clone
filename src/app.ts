@@ -51,6 +51,33 @@ app.engine(
       ifNotEquals(arg1: any, arg2: any) {
         return arg1 !== arg2;
       },
+      pagination(
+        pagination: { page: number; perPage: number; pageCount: number },
+        options: { fn: (...args: any) => string }
+      ) {
+        let acc = options.fn({
+          label: 'prev',
+          page: pagination.page - 1,
+          active: false,
+          disabled: pagination.page <= 1,
+        });
+        for (let i = 0; i < pagination.pageCount; i++) {
+          acc += options.fn({
+            label: i + 1,
+            page: i + 1,
+            active: pagination.page === i + 1,
+            disabled: false,
+          });
+        }
+
+        acc += options.fn({
+          label: 'next',
+          page: pagination.page + 1,
+          active: false,
+          disabled: pagination.page >= pagination.pageCount,
+        });
+        return acc;
+      },
     },
   })
 );

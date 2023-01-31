@@ -6,8 +6,9 @@ import { prisma } from '@/config/prisma';
 import { CreatePostDto, UpdatePostDto } from '@/types/posts.dto';
 import { ImageWidth } from '@/utils/constants';
 
+const perPage = 12;
 export class PostsService {
-  async findAll() {
+  async findAll(page: number) {
     const posts = await prisma.post.findMany({
       include: {
         tags: true,
@@ -15,11 +16,20 @@ export class PostsService {
       orderBy: {
         createdAt: 'desc',
       },
+      take: perPage,
+      skip: (page - 1) * perPage,
     });
-    return posts;
+    const postsCount = await prisma.post.count();
+    return {
+      posts,
+      count: postsCount,
+      page,
+      perPage,
+      pageCount: Math.ceil(postsCount / perPage),
+    };
   }
 
-  async findManyByTags(tagIds: number[]) {
+  async findManyByTags(tagIds: number[], page: number) {
     const posts = await prisma.post.findMany({
       where: {
         tags: {
@@ -36,8 +46,27 @@ export class PostsService {
       orderBy: {
         createdAt: 'desc',
       },
+      take: perPage,
+      skip: (page - 1) * perPage,
     });
-    return posts;
+    const postsCount = await prisma.post.count({
+      where: {
+        tags: {
+          some: {
+            id: {
+              in: tagIds,
+            },
+          },
+        },
+      },
+    });
+    return {
+      posts,
+      count: postsCount,
+      page,
+      perPage,
+      pageCount: Math.ceil(postsCount / perPage),
+    };
   }
 
   async findOneById(id: number) {

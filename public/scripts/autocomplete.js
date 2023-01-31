@@ -5,7 +5,11 @@ export class TagsAutocomplete {
     this.list = this.root.querySelector('.list-group');
 
     if (location.search !== '') {
-      this.initInputValue(location.search);
+      const searchParams = new URLSearchParams(location.search);
+      const query = searchParams.get('query');
+      if (query) {
+        this.initInputValue(query);
+      }
     }
 
     this.input.addEventListener(
@@ -71,9 +75,7 @@ export class TagsAutocomplete {
       </button>`;
   }
 
-  initInputValue(searchString) {
-    const searchParams = new URLSearchParams(searchString);
-    const query = searchParams.get('query');
+  initInputValue(query) {
     const tags =
       query[query.length - 1] === '+'
         ? query.slice(0, query.length - 1).split('+')

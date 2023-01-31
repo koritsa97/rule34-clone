@@ -14,19 +14,22 @@ export class PostsController {
 
   async getPosts(req: Request, res: Response, next: NextFunction) {
     try {
-      const { query } = req.query as { query: string };
+      const { query, page } = req.query as { query: string; page: string };
       const user = req.user as User | undefined;
 
       const message = req.flash('message');
 
       if (!query) {
-        const posts = await this.postsService.findAll();
+        const { posts, ...pagination } = await this.postsService.findAll(
+          +page || 1
+        );
         const tags = this.tagsService.getUniqueTags(
           posts.flatMap((post) => post.tags)
         );
 
         res.render('posts', {
           posts,
+          pagination,
           tags,
           user,
           message:
@@ -44,8 +47,9 @@ export class PostsController {
       const tagsNames = query.toLowerCase().split(' ');
 
       const queriedTags = await this.tagsService.findManyByNames(tagsNames);
-      const posts = await this.postsService.findManyByTags(
-        queriedTags.map(({ id }) => id)
+      const { posts, ...pagination } = await this.postsService.findManyByTags(
+        queriedTags.map(({ id }) => id),
+        +page || 1
       );
       const tags = this.tagsService.getUniqueTags(
         posts.flatMap((post) => post.tags)
@@ -53,6 +57,7 @@ export class PostsController {
 
       res.render('posts', {
         posts,
+        pagination,
         tags,
         user,
         message:
@@ -71,8 +76,10 @@ export class PostsController {
   async getFeed(req: Request, res: Response, next: NextFunction) {
     try {
       const user = req.user as User & { favoriteTags: Tag[] };
-      const posts = await this.postsService.findManyByTags(
-        user.favoriteTags.map((tag) => tag.id)
+      const { page } = req.query as { page: string };
+      const { posts, ...pagination } = await this.postsService.findManyByTags(
+        user.favoriteTags.map((tag) => tag.id),
+        +page || 1
       );
       const tags = this.tagsService.getUniqueTags(
         posts.flatMap((post) => post.tags)
@@ -80,6 +87,7 @@ export class PostsController {
 
       res.render('feed', {
         posts,
+        pagination,
         tags,
         user,
       });
@@ -147,7 +155,7 @@ export class PostsController {
         return;
       }
 
-      const tagNames = (req.body.tags as string)
+      const tagNames: string[] = (req.body.tags as string)
         .toLowerCase()
         .trim()
         .replace(',', '')

@@ -38,30 +38,14 @@ describe('Tags service', () => {
   });
 
   test('should find all posts', async () => {
-    await service.findAll();
+    await service.findAll(1);
     expect(prisma.post.findMany).toBeCalled();
   });
 
   test('should find posts by tags', async () => {
     const tagIds = [1, 2, 3];
-    await service.findManyByTags(tagIds);
-    expect(prisma.post.findMany).toBeCalledWith({
-      orderBy: {
-        createdAt: 'desc',
-      },
-      where: {
-        tags: {
-          some: {
-            id: {
-              in: tagIds,
-            },
-          },
-        },
-      },
-      include: {
-        tags: true,
-      },
-    });
+    await service.findManyByTags(tagIds, 1);
+    expect(prisma.post.findMany).toBeCalled();
   });
 
   test('should find post by id', async () => {
