@@ -29,7 +29,6 @@ export class UsersController {
       }
 
       const isAuthorized = authUser && authUser.id === user.id;
-      console.log(isAuthorized);
 
       res.render('account', {
         user,
